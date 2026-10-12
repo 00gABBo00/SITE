@@ -79,6 +79,12 @@ input{margin-bottom:12px}
 #toast{position:fixed;left:50%;bottom:34px;z-index:1500;transform:translate(-50%,12px);opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;padding:12px 22px;border-radius:999px;font-size:15px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.35);max-width:90%;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
+#timer{position:fixed;left:12px;top:0;z-index:950;border-radius:22px;padding:10px 18px 12px;transform-origin:0 0;touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#timer.snapping{transition:left .3s cubic-bezier(.2,.8,.2,1),top .3s cubic-bezier(.2,.8,.2,1)}
+#timer .tl{font-size:12px;padding-right:30px;white-space:nowrap}
+#tv{font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
+#tResize{position:absolute;top:7px;right:7px;width:22px;height:22px;padding:0;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.2);display:none;align-items:center;justify-content:center;cursor:nesw-resize;touch-action:none}
+@media (hover:hover) and (pointer:fine){#tResize{display:flex}}
 .dot{width:18px;height:18px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
 .dot.new{background:var(--bg)}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--bg);color:var(--fg)}
@@ -139,6 +145,11 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <p id="msg" role="status"></p>
   </div>
 </section>
+<div id="timer" class="glass">
+  <button id="tResize" aria-label="Cambia dimensione"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>
+  <div class="tl">I pensieri spariscono tra</div>
+  <div id="tv">--:--:--</div>
+</div>
 <div id="toast" class="glass" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -172,6 +183,83 @@ const hasPin = () => store.get(PK) === today().key;
 let tt;
 function toast(t){ const el = $("toast"); el.textContent = t; el.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => el.classList.remove("show"), 2800); }
 
+// ---- Timer: si sposta, si ridimensiona e si aggancia ai bordi
+const timer = $("timer"), tv = $("tv"), rh = $("tResize");
+const pad = n => String(n).padStart(2, "0");
+function tick(){
+  const s = Math.max(0, Math.floor(today().msLeft / 1000));
+  tv.textContent = pad(Math.floor(s / 3600)) + ":" + pad(Math.floor(s % 3600 / 60)) + ":" + pad(s % 60);
+}
+tick(); setInterval(tick, 1000);
+
+const TM = 12, TOP = 40;
+let ts = {x: null, y: null, k: 1};
+try { const sv = JSON.parse(store.get("dreamapTimer") || "null"); if (sv){ ts.k = sv.k || 1; ts.x = sv.x; ts.y = sv.y; } } catch(e) {}
+const tsize = () => ({w: timer.offsetWidth * ts.k, h: timer.offsetHeight * ts.k});
+function tApply(){ timer.style.left = ts.x + "px"; timer.style.top = ts.y + "px"; timer.style.transform = "scale(" + ts.k + ")"; }
+function tClamp(){
+  const {w, h} = tsize();
+  ts.x = Math.max(TM, Math.min(ts.x, innerWidth - w - TM));
+  ts.y = Math.max(TOP, Math.min(ts.y, innerHeight - h - TM));
+}
+function tPlace(){
+  const {w, h} = tsize();
+  if (ts.x == null) ts.x = TM;
+  if (ts.y == null) ts.y = innerHeight - h - 70;
+  tClamp(); tApply();
+}
+function tSnap(){
+  tClamp(); tApply();
+  store.set("dreamapTimer", JSON.stringify({k: ts.k, x: ts.x, y: ts.y}));
+}
+tPlace();
+addEventListener("resize", tPlace);
+const kClamp = k => Math.max(0.6, Math.min(2.2, k));
+
+// trascinamento con un dito/mouse, ridimensionamento con due dita
+const ptrs = new Map(); let gest = null;
+function startG(){
+  const v = [...ptrs.values()];
+  if (v.length === 1) gest = {t: "move", sx: v[0].x, sy: v[0].y, x: ts.x, y: ts.y};
+  else if (v.length === 2) gest = {t: "pinch", d: Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y), k: ts.k};
+}
+timer.addEventListener("pointerdown", e => {
+  if (e.target.closest("#tResize")) return;
+  timer.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, {x: e.clientX, y: e.clientY}); startG();
+});
+timer.addEventListener("pointermove", e => {
+  if (!ptrs.has(e.pointerId) || !gest) return;
+  ptrs.set(e.pointerId, {x: e.clientX, y: e.clientY});
+  const v = [...ptrs.values()];
+  if (gest.t === "move" && v.length === 1){
+    ts.x = gest.x + e.clientX - gest.sx; ts.y = gest.y + e.clientY - gest.sy;
+  } else if (gest.t === "pinch" && v.length === 2){
+    ts.k = kClamp(gest.k * Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y) / gest.d);
+  } else return;
+  tClamp(); tApply();
+});
+const endT = e => {
+  if (!ptrs.has(e.pointerId)) return;
+  ptrs.delete(e.pointerId);
+  if (ptrs.size === 0){ gest = null; tSnap(); } else startG();
+};
+timer.addEventListener("pointerup", endT);
+timer.addEventListener("pointercancel", endT);
+
+// ridimensionamento da PC con il quadratino in alto a destra
+let rz = null;
+rh.addEventListener("pointerdown", e => {
+  e.stopPropagation(); rh.setPointerCapture(e.pointerId);
+  rz = {x: e.clientX, k: ts.k, w: timer.offsetWidth};
+});
+rh.addEventListener("pointermove", e => {
+  if (!rz) return;
+  ts.k = kClamp(rz.k + (e.clientX - rz.x) / rz.w); tClamp(); tApply();
+});
+const endR = () => { if (rz){ rz = null; tSnap(); } };
+rh.addEventListener("pointerup", endR);
+rh.addEventListener("pointercancel", endR);
+
 // ---- Benvenuto
 const w = $("welcome");
 const closeWelcome = () => { w.classList.add("out"); setTimeout(() => w.remove(), 700); };
@@ -189,9 +277,6 @@ if (!small) L.control.zoom({position: "bottomright"}).addTo(map);
 const stradale = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19, detectRetina: true,
   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'});
-const rilievo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-  subdomains: "abc", maxNativeZoom: 17, maxZoom: 19, detectRetina: true,
-  attribution: 'Dati &copy; OpenStreetMap, SRTM | Stile &copy; <a href="https://opentopomap.org">OpenTopoMap</a>'});
 const satellite = L.layerGroup([
   L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
     maxNativeZoom: 19, maxZoom: 19, detectRetina: true, attribution: 'Immagini &copy; Esri, Maxar, Earthstar Geographics'}),
@@ -201,7 +286,7 @@ const satellite = L.layerGroup([
 satellite.addTo(map);
 
 // Selettore del tipo di mappa
-const layers = {"Satellite": satellite, "Stradale": stradale, "Rilievo": rilievo};
+const layers = {"Satellite": satellite, "Stradale": stradale};
 let current = "Satellite";
 const layMenu = $("layMenu");
 function drawMenu(){
