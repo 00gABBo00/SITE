@@ -105,9 +105,8 @@ const satellite = L.layerGroup([
   L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
     maxNativeZoom: 19, maxZoom: 19, detectRetina: true,
     attribution: 'Immagini &copy; Esri, Maxar, Earthstar Geographics'}),
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png", {
-    subdomains: "abcd", maxZoom: 20,
-    attribution: '&copy; OpenStreetMap &copy; CARTO'})
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
+    maxNativeZoom: 19, maxZoom: 19, detectRetina: true})
 ]);
 satellite.addTo(map);
 L.control.layers({"Satellite": satellite, "Stradale": stradale, "Rilievo": rilievo}, null,
