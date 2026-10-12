@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DreaMap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+:root{--ink:#1d2540;--panel:#f3f1ec;--line:#d9d5ca;--accent:#e0893a;--muted:#5d637a}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{font-family:'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);display:flex}
+#side{width:380px;max-width:100%;background:var(--panel);display:flex;flex-direction:column;z-index:1000;border-right:1px solid var(--line)}
+#map{flex:1;height:100%}
+header{padding:22px 22px 14px}
+h1{margin:0 0 6px;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
+header p{margin:0;color:var(--muted);font-size:15px;line-height:1.4}
+#form{margin:0 22px 14px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:10px}
+#form[hidden]{display:none}
+#form label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
+textarea,input{width:100%;font:inherit;font-size:15px;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink)}
+textarea{resize:vertical;min-height:84px}
+input{margin-bottom:10px}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:10px}
+#count{font-size:12px;color:var(--muted)}
+button{font:inherit;font-weight:600;border:0;border-radius:6px;padding:9px 16px;cursor:pointer}
+#send{background:var(--ink);color:#fff}
+#send:disabled{opacity:.5;cursor:default}
+#cancel{background:transparent;color:var(--muted)}
+#msg{font-size:13px;margin:8px 0 0;min-height:1em}
+#list{flex:1;overflow:auto;padding:0 22px 22px;margin:0;list-style:none}
+#list li{padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
+#list li:hover .t{color:var(--accent)}
+#list .t{font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+#list .m{font-size:12px;color:var(--muted);margin-top:4px}
+.empty{color:var(--muted);font-size:14px;padding:12px 0;border-top:1px solid var(--line)}
+.dot{width:18px;height:18px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.dot.new{background:var(--ink)}
+.leaflet-popup-content{font-family:inherit;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.leaflet-popup-content small{color:var(--muted)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+@media(max-width:760px){
+ body{flex-direction:column-reverse}
+ #side{width:100%;height:46%;border-right:0;border-top:1px solid var(--line)}
+ #map{height:54%;flex:none}
+ header{padding:14px 16px 8px}h1{font-size:22px}
+ #form{margin:0 16px 10px}#list{padding:0 16px 16px}
+}
+</style>
+</head>
+<body>
+<aside id="side">
+  <header>
+    <h1>DreaMap</h1>
+    <p>Tocca un punto sulla mappa e lascia un pensiero. Gli altri lo leggeranno proprio lì.</p>
+  </header>
+  <div id="form" hidden>
+    <label for="nick">Il tuo nome (facoltativo)</label>
+    <input id="nick" maxlength="30" placeholder="Anonimo">
+    <label for="text">Cosa vuoi dire di questo posto?</label>
+    <textarea id="text" maxlength="280"></textarea>
+    <div class="row">
+      <span id="count">0 / 280</span>
+      <span><button id="cancel" type="button">Annulla</button> <button id="send" type="button">Pubblica</button></span>
+    </div>
+    <p id="msg" role="status"></p>
+  </div>
+  <ul id="list"></ul>
+</aside>
+<div id="map"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const SB_URL = "https://pvqjgqlkvktkzgvjispv.supabase.co";
+const SB_KEY = "sb_publishable_IbnSX5yMcc6KckO9nxJ9Yg_HBDbon4G";
+const API = SB_URL + "/rest/v1/thoughts";
+const H = {apikey: SB_KEY, "Content-Type": "application/json"};
+
+// Avellino e provincia
+const bounds = L.latLngBounds([40.45, 14.40], [41.30, 15.55]);
+const map = L.map("map", {maxBounds: bounds.pad(0.1), maxBoundsViscosity: 0.9, minZoom: 9})
+  .setView([40.9146, 14.7906], 12);
+L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+const icon = c => L.divIcon({className: "", html: '<div class="dot ' + c + '"></div>', iconSize: [18, 18], iconAnchor: [9, 9]});
+const $ = id => document.getElementById(id);
+const form = $("form"), text = $("text"), nick = $("nick"), send = $("send"), msg = $("msg"), list = $("list");
+let picked = null, pickMarker = null;
+const markers = new Map();
+
+function fmt(d){return new Date(d).toLocaleDateString("it-IT", {day: "numeric", month: "short", year: "numeric"});}
+
+function popupNode(t){
+  const d = document.createElement("div");
+  const p = document.createElement("div"); p.textContent = t.message;
+  const s = document.createElement("small"); s.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
+  d.append(p, s); return d;
+}
+
+function addThought(t, prepend){
+  if (markers.has(t.id)) return;
+  const m = L.marker([t.lat, t.lng], {icon: icon("")}).addTo(map).bindPopup(popupNode(t));
+  markers.set(t.id, m);
+  const li = document.createElement("li");
+  const a = document.createElement("div"); a.className = "t"; a.textContent = t.message;
+  const b = document.createElement("div"); b.className = "m"; b.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
+  li.append(a, b);
+  li.onclick = () => { map.flyTo([t.lat, t.lng], Math.max(map.getZoom(), 15)); m.openPopup(); };
+  const empty = list.querySelector(".empty"); if (empty) empty.remove();
+  prepend ? list.prepend(li) : list.append(li);
+}
+
+async function load(){
+  try{
+    const r = await fetch(API + "?select=*&order=created_at.desc&limit=500", {headers: H});
+    if (!r.ok) throw new Error(r.status);
+    const rows = await r.json();
+    if (!rows.length) list.innerHTML = '<li class="empty">Ancora nessun pensiero. Lascia tu il primo.</li>';
+    rows.forEach(t => addThought(t, false));
+  }catch(e){
+    list.innerHTML = '<li class="empty">Non riesco a caricare i pensieri. Riprova tra poco.</li>';
+  }
+}
+
+map.on("click", e => {
+  picked = e.latlng;
+  if (pickMarker) pickMarker.setLatLng(picked); else pickMarker = L.marker(picked, {icon: icon("new")}).addTo(map);
+  form.hidden = false; msg.textContent = ""; text.focus();
+});
+
+function closeForm(){
+  form.hidden = true; picked = null; text.value = ""; $("count").textContent = "0 / 280";
+  if (pickMarker){ map.removeLayer(pickMarker); pickMarker = null; }
+}
+$("cancel").onclick = closeForm;
+text.oninput = () => $("count").textContent = text.value.length + " / 280";
+
+send.onclick = async () => {
+  const message = text.value.trim();
+  if (!picked) return;
+  if (!message){ msg.textContent = "Scrivi qualcosa prima di pubblicare."; return; }
+  const last = +localStorage.getItem("lastPost") || 0;
+  const wait = 60000 - (Date.now() - last);
+  if (wait > 0){ msg.textContent = "Aspetta ancora " + Math.ceil(wait/1000) + " secondi prima di scrivere di nuovo."; return; }
+  send.disabled = true; msg.textContent = "Pubblico...";
+  try{
+    const r = await fetch(API, {method: "POST", headers: {...H, Prefer: "return=representation"},
+      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: nick.value.trim() || null})});
+    if (!r.ok) throw new Error(r.status);
+    const [t] = await r.json();
+    localStorage.setItem("lastPost", Date.now());
+    closeForm(); addThought(t, true);
+    markers.get(t.id).openPopup();
+  }catch(e){
+    msg.textContent = "Non è stato possibile pubblicare. Riprova.";
+  }
+  send.disabled = false;
+};
+
+load();
+</script>
+</body>
+</html>
