@@ -23,9 +23,12 @@ button{font:inherit;color:var(--fg)}
 .pill{width:40px;height:5px;border-radius:3px;background:var(--fg);opacity:.55}
 
 /* Benvenuto */
-#welcome{position:fixed;inset:0;z-index:2000;background:var(--bg);color:var(--fg);display:flex;align-items:center;justify-content:center;padding:28px;text-align:center;transition:opacity .6s}
+#welcome{position:fixed;inset:0;z-index:2000;background:var(--bg);color:var(--fg);display:flex;overflow:auto;padding:28px;text-align:center;transition:opacity .6s}
 #welcome.out{opacity:0;pointer-events:none}
-.wbox{max-width:420px}
+.wbox{max-width:420px;margin:auto}
+#welcome label{font-size:15px;margin-bottom:8px}
+#welcome input{text-align:center;max-width:300px;margin-bottom:8px}
+#wErr{font-size:14px!important;min-height:1.2em;margin:0 0 10px!important}
 #welcome h1{margin:0 0 14px;font-size:44px;font-weight:700;letter-spacing:-.03em}
 #welcome p{margin:0 0 12px;font-size:17px;line-height:1.45}
 #welcome ul{list-style:none;padding:0;margin:20px 0 28px;text-align:left}
@@ -36,8 +39,17 @@ button{font:inherit;color:var(--fg)}
 /* Tendina in alto */
 #drawer{position:fixed;top:0;left:0;right:0;margin:0 auto;max-width:520px;height:min(78vh,600px);height:min(78dvh,600px);z-index:1200;display:flex;flex-direction:column;border-radius:0 0 28px 28px;box-shadow:0 8px 30px rgba(0,0,0,.35);transform:translateY(calc(-100% + 24px));will-change:transform}
 #drawer.snap{transition:transform .32s cubic-bezier(.2,.8,.2,1)}
-#dBody{flex:1;overflow:auto;padding:22px 16px 6px;-webkit-overflow-scrolling:touch}
-#dBody h2{margin:0 4px 14px;font-size:24px;font-weight:700;letter-spacing:-.02em}
+.dHead{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 14px 6px;flex:none}
+.dHead h2{margin:0;flex:1;text-align:center;font-size:22px;font-weight:700;letter-spacing:-.02em}
+#layBtn{width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+#menuBtn{width:44px;height:36px;padding:0;border-radius:12px;border:0;background:#E6E1D7;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;cursor:pointer}
+#menuBtn i{display:block;width:20px;height:2.5px;border-radius:2px;background:#111}
+#layMenu{position:absolute;top:62px;left:12px;z-index:5;border-radius:18px;padding:6px;min-width:150px;background:#2a5f35;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#menuPop{position:absolute;top:60px;right:12px;z-index:5;background:#E6E1D7;border-radius:14px;padding:4px;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#menuPop::before{content:"";position:absolute;top:-8px;right:15px;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid #E6E1D7}
+#menuPop button{border:0;background:transparent;color:#111;font-weight:700;font-size:15px;letter-spacing:.04em;padding:10px 16px;border-radius:10px;cursor:pointer}
+#menuPop[hidden]{display:none}
+#dBody{flex:1;overflow:auto;padding:8px 16px 6px;-webkit-overflow-scrolling:touch}
 #dGrip{height:24px;flex:none;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center}
 #list{list-style:none;margin:0;padding:0}
 #list li{padding:13px 16px;margin-bottom:8px;border-radius:18px;background:rgba(0,0,0,.18);cursor:pointer}
@@ -70,12 +82,16 @@ input{margin-bottom:12px}
 #msg{font-size:13px;margin:8px 0 0;min-height:1em}
 
 /* Livelli e avvisi */
-#lay{position:fixed;top:36px;right:12px;z-index:1000;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
-#layBtn{width:44px;height:44px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.35)}
-#layMenu{border-radius:18px;padding:6px;min-width:150px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
 #layMenu[hidden]{display:none}
 #layMenu button{display:flex;justify-content:space-between;width:100%;border:0;background:transparent;font-size:16px;padding:10px 12px;border-radius:12px;cursor:pointer;text-align:left}
 #layMenu button.on{background:rgba(0,0,0,.22)}
+#layMenu[hidden]{display:none}
+#as{margin:0 0 12px;font-size:14px}
+#uDlg{position:fixed;inset:0;z-index:1800;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px}
+#uDlg[hidden]{display:none}
+#uDlg .card{width:100%;max-width:340px;border-radius:26px;padding:20px;background:var(--bg);box-shadow:0 10px 40px rgba(0,0,0,.45)}
+#uDlg h3{margin-bottom:12px}
+#uMsg{font-size:13px;margin:0;line-height:1.35}
 #toast{position:fixed;left:50%;bottom:34px;z-index:1500;transform:translate(-50%,12px);opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;padding:12px 22px;border-radius:999px;font-size:15px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.35);max-width:90%;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -109,22 +125,35 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
         <li>Puoi mettere un solo pallino al giorno: a mezzanotte sparisce e potrai metterne un altro.</li>
         <li>Tira giù la barra in alto per leggere i pensieri degli altri e raggiungerli sulla mappa.</li>
       </ul>
+      <label for="uIn">Scegli il tuo username</label>
+      <p style="font-size:14px">Firmerà i tuoi pensieri e verrà ricordato ogni volta che torni.</p>
+      <input id="uIn" maxlength="20" placeholder="Il tuo username" autocomplete="off">
+      <p id="wErr" role="status"></p>
       <button id="ok" type="button">Ho capito</button>
     </div>
-    <div id="wBack" hidden><p>Bentornato.</p></div>
+    <div id="wBack" hidden><p id="wBackTxt">Bentornato.</p></div>
   </div>
 </div>
 
 <div id="drawer" class="glass">
-  <div id="dBody"><h2 id="dTitle">Pensieri di oggi</h2><ul id="list"></ul></div>
+  <div class="dHead">
+    <button id="layBtn" aria-label="Tipo di mappa"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg></button>
+    <h2>Pensieri di oggi</h2>
+    <button id="menuBtn" aria-label="Menu"><i></i><i></i><i></i></button>
+    <div id="layMenu" hidden></div>
+    <div id="menuPop" hidden><button id="userItem" type="button">USERNAME</button></div>
+  </div>
+  <div id="dBody"><ul id="list"></ul></div>
   <div id="dGrip" aria-label="Apri l'elenco dei pensieri"><div class="pill"></div></div>
 </div>
 
-<div id="lay">
-  <button id="layBtn" class="glass" aria-label="Tipo di mappa">
-    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg>
-  </button>
-  <div id="layMenu" class="glass" hidden></div>
+<div id="uDlg" hidden>
+  <div class="card">
+    <h3>Il tuo username</h3>
+    <input id="uNew" maxlength="20" autocomplete="off">
+    <p id="uMsg"></p>
+    <div class="row"><button class="b ghost" id="uCancel" type="button">Annulla</button><button class="b" id="uSave" type="button">Salva</button></div>
+  </div>
 </div>
 
 <button id="tab" class="glass" aria-label="Apri il pannello" hidden>›</button>
@@ -134,8 +163,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <div class="head"><h3>Il tuo pensiero</h3><button id="hide" aria-label="Nascondi il pannello">‹</button></div>
   </div>
   <div id="body">
-    <label for="nick">Il tuo nome (facoltativo)</label>
-    <input id="nick" maxlength="30" placeholder="Anonimo">
+    <p id="as">Pubblichi come <b id="asName"></b></p>
     <label for="text">Cosa vuoi dire di questo posto?</label>
     <textarea id="text" maxlength="280"></textarea>
     <div class="row">
@@ -159,13 +187,13 @@ const SB_KEY = "sb_publishable_IbnSX5yMcc6KckO9nxJ9Yg_HBDbon4G";
 const API = SB_URL + "/rest/v1/thoughts";
 const H = {apikey: SB_KEY, "Content-Type": "application/json"};
 const $ = id => document.getElementById(id);
-const VK = "dreamapSeen2", PK = "dreamapPin2";
+const VK = "dreamapSeen2", PK = "dreamapPin2", UK = "dreamapUser2", UCK = "dreamapUserChanged2";
 const store = {
   get: k => { try { return localStorage.getItem(k); } catch(e) { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
   del: k => { try { localStorage.removeItem(k); } catch(e) {} }
 };
-if (location.search.includes("reset")){ store.del(VK); store.del(PK); history.replaceState(null, "", location.pathname); }
+if (location.search.includes("reset")){ store.del(VK); store.del(PK); store.del(UK); store.del(UCK); history.replaceState(null, "", location.pathname); }
 
 // Giorno corrente in ora italiana (la mezzanotte azzera i pallini)
 function today(){
@@ -263,8 +291,19 @@ rh.addEventListener("pointercancel", endR);
 // ---- Benvenuto
 const w = $("welcome");
 const closeWelcome = () => { w.classList.add("out"); setTimeout(() => w.remove(), 700); };
-if (store.get(VK)){ $("wFirst").hidden = true; $("wBack").hidden = false; setTimeout(closeWelcome, 2200); }
-else $("ok").onclick = () => { store.set(VK, "1"); closeWelcome(); };
+const getUser = () => store.get(UK);
+const validName = n => n.length >= 2 && n.length <= 20;
+function refreshUser(){ $("asName").textContent = getUser() || ""; }
+refreshUser();
+if (getUser()){
+  $("wFirst").hidden = true; $("wBack").hidden = false;
+  $("wBackTxt").textContent = "Bentornato, " + getUser() + ".";
+  setTimeout(closeWelcome, 2200);
+} else $("ok").onclick = () => {
+  const n = $("uIn").value.trim();
+  if (!validName(n)){ $("wErr").textContent = "Scegli uno username di almeno 2 caratteri."; return; }
+  store.set(UK, n); store.set(VK, "1"); refreshUser(); closeWelcome();
+};
 
 // ---- Mappa
 const small = innerWidth <= 760;
@@ -300,14 +339,32 @@ function drawMenu(){
   });
 }
 drawMenu();
-$("layBtn").onclick = () => { layMenu.hidden = !layMenu.hidden; };
+const menuPop = $("menuPop");
+$("layBtn").onclick = () => { menuPop.hidden = true; layMenu.hidden = !layMenu.hidden; };
+$("menuBtn").onclick = () => { layMenu.hidden = true; menuPop.hidden = !menuPop.hidden; };
+
+// Cambio username (una volta al giorno)
+const uDlg = $("uDlg"), uNew = $("uNew"), uMsg = $("uMsg");
+$("userItem").onclick = () => {
+  menuPop.hidden = true;
+  if (store.get(UCK) === today().key){ toast("Potrai cambiare username dopo la mezzanotte"); return; }
+  uNew.value = getUser() || ""; uMsg.textContent = "Dopo averlo cambiato potrai cambiarlo di nuovo solo dopo la mezzanotte.";
+  uDlg.hidden = false; uNew.focus();
+};
+$("uCancel").onclick = () => { uDlg.hidden = true; };
+$("uSave").onclick = () => {
+  const n = uNew.value.trim();
+  if (!validName(n)){ uMsg.textContent = "Scrivi almeno 2 caratteri (massimo 20)."; return; }
+  if (n === getUser()){ uDlg.hidden = true; return; }
+  store.set(UK, n); store.set(UCK, today().key); refreshUser(); uDlg.hidden = true; toast("Username cambiato");
+};
 
 // ---- Tendina in alto
 const drawer = $("drawer"), dGrip = $("dGrip");
 let dOpen = false, dd = null;
 const closedY = () => -(drawer.offsetHeight - 24);
 function setY(y, snap){ drawer.classList.toggle("snap", !!snap); drawer.style.transform = "translateY(" + y + "px)"; }
-function openD(o){ dOpen = o; setY(o ? 0 : closedY(), true); }
+function openD(o){ dOpen = o; if (!o){ layMenu.hidden = true; menuPop.hidden = true; } setY(o ? 0 : closedY(), true); }
 setY(closedY());
 addEventListener("resize", () => setY(dOpen ? 0 : closedY()));
 dGrip.addEventListener("pointerdown", e => {
@@ -330,7 +387,7 @@ dGrip.addEventListener("pointerup", endD);
 dGrip.addEventListener("pointercancel", endD);
 
 // ---- Pannello del pensiero
-const panel = $("panel"), grip = $("grip"), tab = $("tab"), text = $("text"), nick = $("nick"), send = $("send"), msg = $("msg"), list = $("list");
+const panel = $("panel"), grip = $("grip"), tab = $("tab"), text = $("text"), send = $("send"), msg = $("msg"), list = $("list");
 let placed = false;
 function place(top){
   top = Math.max(8, Math.min(top, innerHeight - 90));
@@ -413,7 +470,7 @@ send.onclick = async () => {
   send.disabled = true; msg.textContent = "Pubblico...";
   try{
     const r = await fetch(API, {method: "POST", headers: {...H, Prefer: "return=representation"},
-      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: nick.value.trim() || null})});
+      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: getUser() || null})});
     if (!r.ok) throw new Error(r.status);
     const [t] = await r.json();
     store.set(PK, today().key);
