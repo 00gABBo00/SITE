@@ -3,14 +3,21 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#347641">
+<meta name="color-scheme" content="light">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="DreaMap">
 <title>DreaMap</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
 :root{--bg:#347641;--fg:#E6E1D7;--line:rgba(230,225,215,.28);--glass:rgba(52,118,65,.88);--accent:#e0893a}
 *{box-sizing:border-box}
-html,body{height:100%;margin:0}
+html,body{height:100%;margin:0;background:#347641}
 body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",system-ui,sans-serif;overflow:hidden;-webkit-tap-highlight-color:transparent}
-#map{position:absolute;inset:0}
+#map{position:fixed;inset:0}
+.leaflet-control-attribution{background:transparent!important;color:rgba(255,255,255,.75)!important;font-size:10px!important;text-shadow:0 0 3px rgba(0,0,0,.8)}
+.leaflet-control-attribution a{color:inherit!important}
 .glass{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(1.4);backdrop-filter:blur(18px) saturate(1.4);color:var(--fg)}
 button{font:inherit;color:var(--fg)}
 .pill{width:40px;height:5px;border-radius:3px;background:var(--fg);opacity:.55}
@@ -176,6 +183,7 @@ const small = innerWidth <= 760;
 const bounds = L.latLngBounds([40.45, 14.40], [41.30, 15.55]);
 const map = L.map("map", {zoomControl: false, maxBounds: bounds.pad(0.1), maxBoundsViscosity: 0.9, minZoom: 9})
   .setView([40.9146, 14.7906], 12);
+map.attributionControl.setPrefix(false);
 if (!small) L.control.zoom({position: "bottomright"}).addTo(map);
 
 const stradale = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
