@@ -8,68 +8,76 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
 <style>
-:root{--ink:#1d2540;--panel:#f3f1ec;--line:#d9d5ca;--accent:#e0893a;--muted:#5d637a}
+:root{--bg:#347641;--fg:#E6E1D7;--line:rgba(230,225,215,.35);--accent:#e0893a}
 *{box-sizing:border-box}
 html,body{height:100%;margin:0}
-body{font-family:'Bricolage Grotesque',system-ui,sans-serif;color:var(--ink);display:flex}
-#side{width:380px;max-width:100%;background:var(--panel);display:flex;flex-direction:column;z-index:1000;border-right:1px solid var(--line)}
-#map{flex:1;height:100%}
-header{padding:22px 22px 14px}
-h1{margin:0 0 6px;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.05}
-header p{margin:0;color:var(--muted);font-size:15px;line-height:1.4}
-#form{margin:0 22px 14px;padding:14px;background:#fff;border:1px solid var(--line);border-radius:10px}
-#form[hidden]{display:none}
-#form label{display:block;font-size:13px;color:var(--muted);margin-bottom:4px}
-textarea,input{width:100%;font:inherit;font-size:15px;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:var(--ink)}
+body{font-family:'Bricolage Grotesque',system-ui,sans-serif;overflow:hidden}
+#map{position:absolute;inset:0}
+#panel{position:fixed;left:16px;top:16px;width:340px;z-index:1100;background:var(--bg);color:var(--fg);border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.4);display:flex;flex-direction:column;transition:transform .25s}
+#panel.hidden{transform:translateX(calc(-100% - 24px));pointer-events:none}
+#grip{padding:8px 10px 10px 18px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+#grip:active{cursor:grabbing}
+.pill{width:44px;height:4px;border-radius:2px;background:var(--fg);opacity:.5;margin:0 auto 8px}
+.head{display:flex;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.02em}
+#hide,#tab{font:inherit;font-size:22px;line-height:1;background:transparent;color:var(--fg);border:0;cursor:pointer}
+#hide{width:44px;height:44px;border-radius:50%}
+#tab{position:fixed;left:0;top:16px;z-index:1100;width:34px;height:48px;background:var(--bg);border-radius:0 12px 12px 0;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+#tab[hidden]{display:none}
+#body{overflow:auto;padding:0 18px 16px;flex:1;-webkit-overflow-scrolling:touch}
+#body p{margin:0 0 12px;font-size:15px;line-height:1.4}
+#form{margin:0 0 12px;padding:12px;border:1px solid var(--line);border-radius:10px;background:rgba(0,0,0,.18)}
+#form[hidden],#note[hidden]{display:none}
+label{display:block;font-size:13px;margin-bottom:4px}
+textarea,input{width:100%;font:inherit;font-size:16px;padding:9px 10px;border:1px solid var(--line);border-radius:6px;background:rgba(0,0,0,.25);color:var(--fg)}
 textarea{resize:vertical;min-height:84px}
 input{margin-bottom:10px}
-.row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:10px}
-#count{font-size:12px;color:var(--muted)}
-button{font:inherit;font-weight:600;border:0;border-radius:6px;padding:9px 16px;cursor:pointer}
-#send{background:var(--ink);color:#fff}
-#send:disabled{opacity:.5;cursor:default}
-#cancel{background:transparent;color:var(--muted)}
+::placeholder{color:var(--fg);opacity:.6}
+.row{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:10px;font-size:12px}
+button.b{font:inherit;font-weight:600;font-size:15px;color:var(--fg);background:rgba(0,0,0,.25);border:1px solid var(--fg);border-radius:6px;padding:9px 16px;cursor:pointer}
+button.b.ghost{border-color:transparent;background:transparent}
+button.b:disabled{opacity:.5}
 #msg{font-size:13px;margin:8px 0 0;min-height:1em}
-#list{flex:1;overflow:auto;padding:0 22px 22px;margin:0;list-style:none}
+#list{list-style:none;margin:0;padding:0}
 #list li{padding:12px 0;border-top:1px solid var(--line);cursor:pointer}
-#list li:hover .t{color:var(--accent)}
+#list li:hover .t{text-decoration:underline}
 #list .t{font-size:15px;line-height:1.4;overflow-wrap:anywhere}
-#list .m{font-size:12px;color:var(--muted);margin-top:4px}
-.empty{color:var(--muted);font-size:14px;padding:12px 0;border-top:1px solid var(--line)}
-.dot{width:18px;height:18px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4)}
-.dot.new{background:var(--ink)}
+#list .m{font-size:12px;margin-top:4px}
+.dot{width:18px;height:18px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+.dot.new{background:var(--bg)}
+.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--bg);color:var(--fg)}
 .leaflet-popup-content{font-family:inherit;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
-.leaflet-popup-content small{color:var(--muted)}
-button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-@media(max-width:760px){
- body{flex-direction:column-reverse}
- #side{width:100%;height:46%;border-right:0;border-top:1px solid var(--line)}
- #map{height:54%;flex:none}
- header{padding:14px 16px 8px}h1{font-size:22px}
- #form{margin:0 16px 10px}#list{padding:0 16px 16px}
-}
+.leaflet-container a.leaflet-popup-close-button{color:var(--fg)}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--fg);outline-offset:1px}
+@media(max-width:760px){#panel{left:10px;right:10px;width:auto}h1{font-size:22px}}
+@media(prefers-reduced-motion:reduce){#panel{transition:none}}
 </style>
 </head>
 <body>
-<aside id="side">
-  <header>
-    <h1>DreaMap</h1>
-    <p>Tocca un punto sulla mappa e lascia un pensiero. Gli altri lo leggeranno proprio lì.</p>
-  </header>
-  <div id="form" hidden>
-    <label for="nick">Il tuo nome (facoltativo)</label>
-    <input id="nick" maxlength="30" placeholder="Anonimo">
-    <label for="text">Cosa vuoi dire di questo posto?</label>
-    <textarea id="text" maxlength="280"></textarea>
-    <div class="row">
-      <span id="count">0 / 280</span>
-      <span><button id="cancel" type="button">Annulla</button> <button id="send" type="button">Pubblica</button></span>
-    </div>
-    <p id="msg" role="status"></p>
-  </div>
-  <ul id="list"></ul>
-</aside>
 <div id="map"></div>
+<button id="tab" aria-label="Apri il pannello" hidden>›</button>
+<section id="panel">
+  <div id="grip">
+    <div class="pill"></div>
+    <div class="head"><h1>DreaMap</h1><button id="hide" aria-label="Nascondi il pannello">‹</button></div>
+  </div>
+  <div id="body">
+    <p>Tocca un punto sulla mappa e lascia un pensiero. Gli altri lo leggeranno proprio lì. Puoi mettere un solo pallino.</p>
+    <p id="note" hidden>Hai già lasciato il tuo pensiero: ogni dispositivo può metterne uno solo.</p>
+    <div id="form" hidden>
+      <label for="nick">Il tuo nome (facoltativo)</label>
+      <input id="nick" maxlength="30" placeholder="Anonimo">
+      <label for="text">Cosa vuoi dire di questo posto?</label>
+      <textarea id="text" maxlength="280"></textarea>
+      <div class="row">
+        <span id="count">0 / 280</span>
+        <span><button class="b ghost" id="cancel" type="button">Annulla</button> <button class="b" id="send" type="button">Pubblica</button></span>
+      </div>
+      <p id="msg" role="status"></p>
+    </div>
+    <ul id="list"></ul>
+  </div>
+</section>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script>
@@ -77,39 +85,66 @@ const SB_URL = "https://pvqjgqlkvktkzgvjispv.supabase.co";
 const SB_KEY = "sb_publishable_IbnSX5yMcc6KckO9nxJ9Yg_HBDbon4G";
 const API = SB_URL + "/rest/v1/thoughts";
 const H = {apikey: SB_KEY, "Content-Type": "application/json"};
+const KEY = "dreamapPosted";
+const had = () => { try { return localStorage.getItem(KEY); } catch(e) { return null; } };
+const mark = id => { try { localStorage.setItem(KEY, id); } catch(e) {} };
 
-// Avellino e provincia
+// ---- Mappa: Avellino e provincia
 const bounds = L.latLngBounds([40.45, 14.40], [41.30, 15.55]);
-const map = L.map("map", {maxBounds: bounds.pad(0.1), maxBoundsViscosity: 0.9, minZoom: 9})
+const map = L.map("map", {zoomControl: false, maxBounds: bounds.pad(0.1), maxBoundsViscosity: 0.9, minZoom: 9})
   .setView([40.9146, 14.7906], 12);
+L.control.zoom({position: "topright"}).addTo(map);
+
 const stradale = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19, detectRetina: true,
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-});
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'});
 const rilievo = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
   subdomains: "abc", maxNativeZoom: 17, maxZoom: 19, detectRetina: true,
-  attribution: 'Dati &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, SRTM | Stile &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (CC-BY-SA)'
-});
-const esri = "https://server.arcgisonline.com/ArcGIS/rest/services/";
+  attribution: 'Dati &copy; OpenStreetMap, SRTM | Stile &copy; <a href="https://opentopomap.org">OpenTopoMap</a>'});
 const satellite = L.layerGroup([
-  L.tileLayer(esri + "World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+  L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
     maxNativeZoom: 19, maxZoom: 19, detectRetina: true,
-    attribution: 'Immagini &copy; Esri, Maxar, Earthstar Geographics'
-  }),
-  L.tileLayer(esri + "Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
-    maxNativeZoom: 19, maxZoom: 19, detectRetina: true
-  })
+    attribution: 'Immagini &copy; Esri, Maxar, Earthstar Geographics'}),
+  L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}{r}.png", {
+    subdomains: "abcd", maxZoom: 20,
+    attribution: '&copy; OpenStreetMap &copy; CARTO'})
 ]);
 satellite.addTo(map);
-L.control.layers({"Satellite": satellite, "Stradale": stradale, "Rilievo": rilievo}, null, {collapsed: false}).addTo(map);
+L.control.layers({"Satellite": satellite, "Stradale": stradale, "Rilievo": rilievo}, null,
+  {collapsed: innerWidth <= 760}).addTo(map);
 
-const icon = c => L.divIcon({className: "", html: '<div class="dot ' + c + '"></div>', iconSize: [18, 18], iconAnchor: [9, 9]});
+// ---- Pannello: spostabile in alto/in basso e nascondibile
 const $ = id => document.getElementById(id);
-const form = $("form"), text = $("text"), nick = $("nick"), send = $("send"), msg = $("msg"), list = $("list");
+const panel = $("panel"), grip = $("grip"), tab = $("tab"), form = $("form"), text = $("text"),
+  nick = $("nick"), send = $("send"), msg = $("msg"), list = $("list"), note = $("note");
+
+function place(top){
+  top = Math.max(8, Math.min(top, innerHeight - 90));
+  panel.style.top = top + "px";
+  panel.style.maxHeight = (innerHeight - top - 10) + "px";
+  tab.style.top = top + "px";
+}
+place(innerWidth <= 760 ? Math.round(innerHeight * 0.52) : 16);
+addEventListener("resize", () => place(panel.offsetTop));
+
+let drag = null;
+grip.addEventListener("pointerdown", e => {
+  if (e.target.closest("button")) return;
+  drag = {y: e.clientY, top: panel.offsetTop};
+  grip.setPointerCapture(e.pointerId);
+});
+grip.addEventListener("pointermove", e => { if (drag) place(drag.top + e.clientY - drag.y); });
+["pointerup", "pointercancel"].forEach(ev => grip.addEventListener(ev, () => drag = null));
+
+function setHidden(h){ panel.classList.toggle("hidden", h); tab.hidden = !h; }
+$("hide").onclick = () => setHidden(true);
+tab.onclick = () => setHidden(false);
+
+// ---- Pensieri
+const icon = c => L.divIcon({className: "", html: '<div class="dot ' + c + '"></div>', iconSize: [18, 18], iconAnchor: [9, 9]});
 let picked = null, pickMarker = null;
 const markers = new Map();
-
-function fmt(d){return new Date(d).toLocaleDateString("it-IT", {day: "numeric", month: "short", year: "numeric"});}
+const fmt = d => new Date(d).toLocaleDateString("it-IT", {day: "numeric", month: "short", year: "numeric"});
 
 function popupNode(t){
   const d = document.createElement("div");
@@ -144,9 +179,12 @@ async function load(){
 }
 
 map.on("click", e => {
-  picked = e.latlng;
+  setHidden(false);
+  if (had()){ form.hidden = true; note.hidden = false; return; }
+  note.hidden = true; picked = e.latlng;
   if (pickMarker) pickMarker.setLatLng(picked); else pickMarker = L.marker(picked, {icon: icon("new")}).addTo(map);
-  form.hidden = false; msg.textContent = ""; text.focus();
+  form.hidden = false; msg.textContent = "";
+  if (innerWidth > 760) text.focus();
 });
 
 function closeForm(){
@@ -159,17 +197,15 @@ text.oninput = () => $("count").textContent = text.value.length + " / 280";
 send.onclick = async () => {
   const message = text.value.trim();
   if (!picked) return;
+  if (had()){ closeForm(); note.hidden = false; return; }
   if (!message){ msg.textContent = "Scrivi qualcosa prima di pubblicare."; return; }
-  const last = +localStorage.getItem("lastPost") || 0;
-  const wait = 60000 - (Date.now() - last);
-  if (wait > 0){ msg.textContent = "Aspetta ancora " + Math.ceil(wait/1000) + " secondi prima di scrivere di nuovo."; return; }
   send.disabled = true; msg.textContent = "Pubblico...";
   try{
     const r = await fetch(API, {method: "POST", headers: {...H, Prefer: "return=representation"},
       body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: nick.value.trim() || null})});
     if (!r.ok) throw new Error(r.status);
     const [t] = await r.json();
-    localStorage.setItem("lastPost", Date.now());
+    mark(t.id);
     closeForm(); addThought(t, true);
     markers.get(t.id).openPopup();
   }catch(e){
