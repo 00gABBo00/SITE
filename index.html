@@ -541,10 +541,10 @@ const COLORS = [{v:"#1f2d5a",n:"Blu notte"},{v:"#2748b0",n:"Cobalto"},{v:"#17181
 const SHAPES = [
   {id:"smussato", n:"Smussato", pl:30, pr:30, svg:'<rect x="1" y="1" width="218" height="110" rx="32"/>'},
   {id:"nuvoletta", n:"Nuvoletta", pl:30, pr:30, svg:'<rect x="1" y="1" width="218" height="110" rx="26"/><path d="M90 108C100 116 106 124 110 131C114 124 120 116 130 108Z"/>'},
-  {id:"pensiero", n:"Pensiero", pl:38, pr:38, svg:'<ellipse cx="110" cy="54" rx="84" ry="40"/><circle cx="36" cy="56" r="24"/><circle cx="72" cy="30" r="26"/><circle cx="116" cy="28" r="26"/><circle cx="156" cy="34" r="24"/><circle cx="186" cy="56" r="24"/><circle cx="156" cy="80" r="24"/><circle cx="112" cy="82" r="24"/><circle cx="68" cy="80" r="24"/><circle cx="102" cy="116" r="8"/><circle cx="110" cy="128" r="3.5"/>'},
+  {id:"pensiero", n:"Pensiero", pl:44, pr:44, svg:'<ellipse cx="110" cy="57" rx="86" ry="46"/><circle cx="58" cy="30" r="26"/><circle cx="162" cy="30" r="26"/><circle cx="30" cy="58" r="24"/><circle cx="190" cy="58" r="24"/><circle cx="58" cy="82" r="26"/><circle cx="162" cy="82" r="26"/><circle cx="104" cy="117" r="7.5"/><circle cx="111" cy="128" r="3.5"/>'},
   {id:"pillola", n:"Pillola", pl:44, pr:44, svg:'<rect x="1" y="6" width="218" height="100" rx="50"/>'},
   {id:"biglietto", n:"Biglietto", pl:28, pr:46, svg:'<path d="M6 6H214V43A13 13 0 0 0 214 69V106H6V69A13 13 0 0 0 6 43Z" stroke="#d4c3a1" stroke-width="10" stroke-linejoin="round"/><line x1="184" y1="16" x2="184" y2="96" stroke="#b39d6e" stroke-width="2" stroke-dasharray="4 5"/>'},
-  {id:"organica", n:"Organica", pl:38, pr:38, svg:'<path d="M44 14C86 0 148 4 186 20C218 34 218 80 192 98C158 114 84 114 44 100C8 84 8 32 44 14Z"/><path d="M110 131C101 123 101 113 110 110C119 113 119 123 110 131Z"/>'}
+  {id:"organica", n:"Organica", pl:42, pr:42, svg:'<path d="M44 14C86 0 148 4 186 20C218 34 218 80 192 98C158 114 84 114 44 100C8 84 8 32 44 14Z"/><path d="M110 131C101 123 101 113 110 110C119 113 119 123 110 131Z"/>'}
 ];
 const svgUrl = sh => 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 132" fill="' + SAND + '">' + sh.svg + '</svg>') + '")';
 let pick = {color: COLORS[0].v, shape: SHAPES[0].id};
