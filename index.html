@@ -33,7 +33,7 @@ button{font:inherit;color:var(--fg)}
 #welcome p{margin:0 0 12px;font-size:17px;line-height:1.45}
 #welcome ul{list-style:none;padding:0;margin:20px 0 28px;text-align:left}
 #welcome li{padding:12px 16px;margin-bottom:8px;border-radius:16px;background:rgba(0,0,0,.18);font-size:16px;line-height:1.35}
-#ok{border:0;border-radius:999px;background:var(--fg);color:var(--bg);font-weight:600;font-size:17px;padding:14px 40px;cursor:pointer}
+#ok{transition:background .3s,color .3s;border:0;border-radius:999px;background:var(--fg);color:var(--bg);font-weight:600;font-size:17px;padding:14px 40px;cursor:pointer}
 #wFirst[hidden],#wBack[hidden]{display:none}
 
 /* Tendina in alto */
@@ -41,14 +41,15 @@ button{font:inherit;color:var(--fg)}
 #drawer.snap{transition:transform .32s cubic-bezier(.2,.8,.2,1)}
 .dHead{position:relative;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 14px 6px;flex:none}
 .dHead h2{margin:0;flex:1;text-align:center;font-size:22px;font-weight:700;letter-spacing:-.02em}
-#layBtn{width:44px;height:44px;border-radius:50%;border:0;background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+#layBtn{width:44px;height:44px;border-radius:50%;border:0;background:#E6E1D7;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer}
 #menuBtn{width:44px;height:36px;padding:0;border-radius:12px;border:0;background:#E6E1D7;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px;cursor:pointer}
-#menuBtn i{display:block;width:20px;height:2.5px;border-radius:2px;background:#111}
+#menuBtn{transition:transform .15s}
+#menuBtn:active,#layBtn:active{transform:scale(.92)}
+#menuBtn i{display:block;width:20px;height:2.5px;border-radius:2px;background:#111;transition:transform .3s cubic-bezier(.2,1,.3,1),opacity .2s}
+#menuBtn.open i:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+#menuBtn.open i:nth-child(2){opacity:0;transform:scaleX(0)}
+#menuBtn.open i:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
 #layMenu{position:absolute;top:62px;left:12px;z-index:5;border-radius:18px;padding:6px;min-width:150px;background:#2a5f35;box-shadow:0 6px 24px rgba(0,0,0,.4)}
-#menuPop{position:absolute;top:60px;right:12px;z-index:5;background:#E6E1D7;border-radius:14px;padding:4px;box-shadow:0 6px 24px rgba(0,0,0,.4)}
-#menuPop::before{content:"";position:absolute;top:-8px;right:15px;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid #E6E1D7}
-#menuPop button{border:0;background:transparent;color:#111;font-weight:700;font-size:15px;letter-spacing:.04em;padding:10px 16px;border-radius:10px;cursor:pointer}
-#menuPop[hidden]{display:none}
 #dBody{flex:1;overflow:auto;padding:8px 16px 6px;-webkit-overflow-scrolling:touch}
 #dGrip{height:24px;flex:none;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center}
 #list{list-style:none;margin:0;padding:0}
@@ -87,11 +88,28 @@ input{margin-bottom:12px}
 #layMenu button.on{background:rgba(0,0,0,.22)}
 #layMenu[hidden]{display:none}
 #as{margin:0 0 12px;font-size:14px}
-#uDlg{position:fixed;inset:0;z-index:1800;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px}
-#uDlg[hidden]{display:none}
-#uDlg .card{width:100%;max-width:340px;border-radius:26px;padding:20px;background:var(--bg);box-shadow:0 10px 40px rgba(0,0,0,.45)}
-#uDlg h3{margin-bottom:12px}
-#uMsg{font-size:13px;margin:0;line-height:1.35}
+#ok:disabled{opacity:.7}
+#ok.bad{background:#d9443f;color:#fff;animation:shake .5s}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
+#menuPop{position:absolute;top:60px;right:12px;z-index:5;width:min(300px,calc(100% - 24px));background:#E6E1D7;color:#111;border-radius:22px;padding:16px 18px 14px;box-shadow:0 8px 30px rgba(0,0,0,.4);transform-origin:top right;opacity:0;transform:scale(.85) translateY(-10px);visibility:hidden;pointer-events:none;transition:opacity .22s,transform .3s cubic-bezier(.2,1.2,.3,1),visibility 0s .3s}
+#menuPop.show{opacity:1;transform:none;visibility:visible;pointer-events:auto;transition-delay:0s}
+.mrow{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+#userItem{font-size:26px;font-weight:800;letter-spacing:.01em;border:0;background:transparent;color:#111;padding:0;cursor:pointer}
+.mq{font-size:12px}
+.mline{height:1px;background:#111;margin:10px 0 8px}
+.mcur{font-size:13px;overflow-wrap:anywhere}
+#uDlg{position:fixed;inset:0;z-index:1800;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
+#uDlg.show{opacity:1;visibility:visible;transition-delay:0s}
+.ucard{position:absolute;width:calc(100% - 40px);max-width:340px;background:#E6E1D7;color:#111;border-radius:26px;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.45);opacity:0;transform:scale(.85) translateY(14px);visibility:hidden;pointer-events:none;transition:opacity .22s,transform .32s cubic-bezier(.2,1.2,.3,1),visibility 0s .32s}
+.ucard.on{opacity:1;transform:none;visibility:visible;pointer-events:auto;transition-delay:0s}
+.uq{margin:0 0 18px;font-size:19px;font-weight:700;text-align:center}
+.uopts{display:flex;gap:10px}
+.blk{flex:1;background:#111;color:#fff;border:0;border-radius:14px;font-size:16px;font-weight:600;padding:12px 18px;cursor:pointer}
+.blk.ghostb{background:transparent;color:#111}
+#uEdit h3{margin-bottom:12px;color:#111}
+#uNew{background:#fff;color:#111;border:1px solid rgba(0,0,0,.35);margin-bottom:10px}
+#uMsg{font-size:13px;line-height:1.4;margin:0 0 14px;color:#111}
+@media(prefers-reduced-motion:reduce){#ok.bad{animation:none}#menuPop,.ucard,#uDlg{transition:none}}
 #toast{position:fixed;left:50%;bottom:34px;z-index:1500;transform:translate(-50%,12px);opacity:0;transition:opacity .4s,transform .4s;pointer-events:none;padding:12px 22px;border-radius:999px;font-size:15px;font-weight:600;box-shadow:0 6px 24px rgba(0,0,0,.35);max-width:90%;text-align:center}
 #toast.show{opacity:1;transform:translate(-50%,0)}
 
@@ -141,18 +159,26 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <h2>Pensieri di oggi</h2>
     <button id="menuBtn" aria-label="Menu"><i></i><i></i><i></i></button>
     <div id="layMenu" hidden></div>
-    <div id="menuPop" hidden><button id="userItem" type="button">USERNAME</button></div>
+    <div id="menuPop">
+      <div class="mrow"><button id="userItem" type="button">USERNAME</button><span class="mq">vuoi cambiarlo?</span></div>
+      <div class="mline"></div>
+      <div class="mcur" id="curName"></div>
+    </div>
   </div>
   <div id="dBody"><ul id="list"></ul></div>
   <div id="dGrip" aria-label="Apri l'elenco dei pensieri"><div class="pill"></div></div>
 </div>
 
-<div id="uDlg" hidden>
-  <div class="card">
-    <h3>Il tuo username</h3>
+<div id="uDlg">
+  <div class="ucard" id="uConfirm">
+    <p class="uq">Sei sicuro di volerlo cambiare?</p>
+    <div class="uopts"><button class="blk" id="uYes" type="button">Sì</button><button class="blk" id="uNo" type="button">No</button></div>
+  </div>
+  <div class="ucard" id="uEdit">
+    <h3>Il tuo nuovo username</h3>
     <input id="uNew" maxlength="20" autocomplete="off">
     <p id="uMsg"></p>
-    <div class="row"><button class="b ghost" id="uCancel" type="button">Annulla</button><button class="b" id="uSave" type="button">Salva</button></div>
+    <div class="uopts"><button class="blk ghostb" id="uCancel" type="button">Annulla</button><button class="blk" id="uSave" type="button">Salva</button></div>
   </div>
 </div>
 
@@ -187,7 +213,7 @@ const SB_KEY = "sb_publishable_IbnSX5yMcc6KckO9nxJ9Yg_HBDbon4G";
 const API = SB_URL + "/rest/v1/thoughts";
 const H = {apikey: SB_KEY, "Content-Type": "application/json"};
 const $ = id => document.getElementById(id);
-const VK = "dreamapSeen2", PK = "dreamapPin2", UK = "dreamapUser2", UCK = "dreamapUserChanged2";
+const VK = "dreamapSeen2", PK = "dreamapPin2", UK = "dreamapUser3", UCK = "dreamapUserChanged3";
 const store = {
   get: k => { try { return localStorage.getItem(k); } catch(e) { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
@@ -292,18 +318,50 @@ rh.addEventListener("pointercancel", endR);
 const w = $("welcome");
 const closeWelcome = () => { w.classList.add("out"); setTimeout(() => w.remove(), 700); };
 const getUser = () => store.get(UK);
-const validName = n => n.length >= 2 && n.length <= 20;
-function refreshUser(){ $("asName").textContent = getUser() || ""; }
+// Controllo username: caratteri ammessi e parole offensive
+const BAD_SUB = ["cazzo","minchia","merda","stronz","puttan","troia","vaffanculo","fanculo","zoccola","ricchione","frocio","bastard","mignotta","sborra","pompin","pedofil","stupr","porcodio","dioporco","fuck","shit","bitch","cunt","asshole","whore","slut","nigger","nigga","faggot","retard","hitler","rapist"];
+const BAD_WORD = ["negro","fica","figa","culo","nazi","pedo","rape","porn"];
+function isOffensive(name){
+  const m = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/0/g,"o").replace(/1/g,"i").replace(/3/g,"e").replace(/4/g,"a").replace(/5/g,"s").replace(/7/g,"t").replace(/@/g,"a").replace(/\$/g,"s");
+  const flat = m.replace(/[^a-z]/g, "");
+  if (BAD_SUB.some(w => flat.includes(w))) return true;
+  return m.split(/[^a-z]+/).concat(flat).some(t => BAD_WORD.includes(t));
+}
+function nameError(n){
+  if (!n) return "Scrivi uno username per entrare.";
+  if (n.length < 2 || n.length > 20) return "Lo username deve avere da 2 a 20 caratteri.";
+  if (!/^[A-Za-z0-9-]+$/.test(n)) return "Usa solo lettere, numeri e trattini.";
+  if (isOffensive(n)) return "Questo username non è consentito: scegline un altro.";
+  return "";
+}
+async function claimName(n){
+  try{
+    const r = await fetch(SB_URL + "/rest/v1/usernames", {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({name: n})});
+    if (r.ok) return "ok";
+    return r.status === 409 ? "taken" : "error";
+  }catch(e){ return "error"; }
+}
+function bad(btn){ btn.classList.remove("bad"); void btn.offsetWidth; btn.classList.add("bad"); setTimeout(() => btn.classList.remove("bad"), 1000); }
+function refreshUser(){ $("asName").textContent = getUser() || ""; $("curName").textContent = "Il tuo username: " + (getUser() || ""); }
 refreshUser();
 if (getUser()){
   $("wFirst").hidden = true; $("wBack").hidden = false;
   $("wBackTxt").textContent = "Bentornato, " + getUser() + ".";
   setTimeout(closeWelcome, 2200);
-} else $("ok").onclick = () => {
-  const n = $("uIn").value.trim();
-  if (!validName(n)){ $("wErr").textContent = "Scegli uno username di almeno 2 caratteri."; return; }
-  store.set(UK, n); store.set(VK, "1"); refreshUser(); closeWelcome();
-};
+} else {
+  $("ok").onclick = async () => {
+    const btn = $("ok"), n = $("uIn").value.trim(), err = nameError(n);
+    if (err){ $("wErr").textContent = err; bad(btn); return; }
+    btn.disabled = true; btn.textContent = "Controllo...";
+    const res = await claimName(n);
+    btn.disabled = false; btn.textContent = "Ho capito";
+    if (res === "taken"){ $("wErr").textContent = "Questo username esiste già: cercane un altro."; bad(btn); return; }
+    if (res === "error"){ $("wErr").textContent = "Non riesco a controllare lo username. Riprova."; bad(btn); return; }
+    store.set(UK, n); store.set(VK, "1"); refreshUser(); closeWelcome();
+  };
+  $("uIn").addEventListener("keydown", e => { if (e.key === "Enter") $("ok").click(); });
+}
 
 // ---- Mappa
 const small = innerWidth <= 760;
@@ -339,24 +397,42 @@ function drawMenu(){
   });
 }
 drawMenu();
-const menuPop = $("menuPop");
-$("layBtn").onclick = () => { menuPop.hidden = true; layMenu.hidden = !layMenu.hidden; };
-$("menuBtn").onclick = () => { layMenu.hidden = true; menuPop.hidden = !menuPop.hidden; };
+const menuPop = $("menuPop"), menuBtn = $("menuBtn");
+function setMenu(o){ menuPop.classList.toggle("show", o); menuBtn.classList.toggle("open", o); menuBtn.setAttribute("aria-expanded", o); }
+$("layBtn").onclick = () => { setMenu(false); layMenu.hidden = !layMenu.hidden; };
+menuBtn.onclick = () => { layMenu.hidden = true; setMenu(!menuPop.classList.contains("show")); };
+document.addEventListener("pointerdown", e => {
+  if (menuPop.classList.contains("show") && !e.target.closest("#menuPop,#menuBtn")) setMenu(false);
+});
 
-// Cambio username (una volta al giorno)
-const uDlg = $("uDlg"), uNew = $("uNew"), uMsg = $("uMsg");
+// Cambio username: USERNAME -> "sei sicuro?" -> casella di testo (una volta al giorno)
+const uDlg = $("uDlg"), uConfirm = $("uConfirm"), uEdit = $("uEdit"), uNew = $("uNew"), uMsg = $("uMsg");
+function showCard(w){ uDlg.classList.toggle("show", !!w); uConfirm.classList.toggle("on", w === "c"); uEdit.classList.toggle("on", w === "e"); }
 $("userItem").onclick = () => {
-  menuPop.hidden = true;
+  setMenu(false);
   if (store.get(UCK) === today().key){ toast("Potrai cambiare username dopo la mezzanotte"); return; }
-  uNew.value = getUser() || ""; uMsg.textContent = "Dopo averlo cambiato potrai cambiarlo di nuovo solo dopo la mezzanotte.";
-  uDlg.hidden = false; uNew.focus();
+  showCard("c");
 };
-$("uCancel").onclick = () => { uDlg.hidden = true; };
-$("uSave").onclick = () => {
-  const n = uNew.value.trim();
-  if (!validName(n)){ uMsg.textContent = "Scrivi almeno 2 caratteri (massimo 20)."; return; }
-  if (n === getUser()){ uDlg.hidden = true; return; }
-  store.set(UK, n); store.set(UCK, today().key); refreshUser(); uDlg.hidden = true; toast("Username cambiato");
+$("uNo").onclick = () => showCard(null);
+$("uCancel").onclick = () => showCard(null);
+uDlg.addEventListener("pointerdown", e => { if (e.target === uDlg) showCard(null); });
+$("uYes").onclick = () => {
+  uNew.value = getUser() || "";
+  uMsg.textContent = "Potrai cambiarlo di nuovo solo alla fine della giornata, dopo la mezzanotte.";
+  showCard("e"); setTimeout(() => uNew.focus(), 340);
+};
+uNew.addEventListener("keydown", e => { if (e.key === "Enter") $("uSave").click(); });
+$("uSave").onclick = async () => {
+  const n = uNew.value.trim(), btn = $("uSave"), err = nameError(n);
+  if (err){ uMsg.textContent = err; return; }
+  if (n === getUser()){ showCard(null); return; }
+  btn.disabled = true; btn.textContent = "Controllo...";
+  const same = getUser() && n.toLowerCase() === getUser().toLowerCase();
+  const res = same ? "ok" : await claimName(n);
+  btn.disabled = false; btn.textContent = "Salva";
+  if (res === "taken"){ uMsg.textContent = "Questo username esiste già: cercane un altro."; return; }
+  if (res === "error"){ uMsg.textContent = "Non riesco a controllare lo username. Riprova."; return; }
+  store.set(UK, n); store.set(UCK, today().key); refreshUser(); showCard(null); toast("Username cambiato");
 };
 
 // ---- Tendina in alto
@@ -364,7 +440,7 @@ const drawer = $("drawer"), dGrip = $("dGrip");
 let dOpen = false, dd = null;
 const closedY = () => -(drawer.offsetHeight - 24);
 function setY(y, snap){ drawer.classList.toggle("snap", !!snap); drawer.style.transform = "translateY(" + y + "px)"; }
-function openD(o){ dOpen = o; if (!o){ layMenu.hidden = true; menuPop.hidden = true; } setY(o ? 0 : closedY(), true); }
+function openD(o){ dOpen = o; if (!o){ layMenu.hidden = true; setMenu(false); } setY(o ? 0 : closedY(), true); }
 setY(closedY());
 addEventListener("resize", () => setY(dOpen ? 0 : closedY()));
 dGrip.addEventListener("pointerdown", e => {
