@@ -165,6 +165,36 @@ input{margin-bottom:12px}
 .rxb{width:50px;height:50px;border:0;border-radius:50%;background:transparent;font-size:30px;line-height:1;cursor:pointer;transition:transform .15s}
 .rxb:hover{transform:scale(1.2) translateY(-3px)}
 .rxb:active{transform:scale(.9)}
+.camRow{display:flex;align-items:center;gap:10px;margin-top:10px;font-size:13px;min-height:44px}
+.camb{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:#d4c3a1;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s,opacity .2s}
+.camb:active{transform:scale(.9)}
+.camb.off{opacity:.45}
+#thumbBox{position:relative;display:flex}
+#thumbBox[hidden],#camHint[hidden]{display:none}
+#thumb{width:44px;height:44px;object-fit:cover;border-radius:12px;border:2px solid var(--fg)}
+#thumbX{position:absolute;top:-7px;right:-7px;width:20px;height:20px;padding:0;border-radius:50%;border:0;background:#E6E1D7;color:#111;font-size:14px;line-height:1;cursor:pointer}
+#camDlg{position:fixed;inset:0;z-index:1900;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:16px;animation:rfade .2s}
+#camDlg[hidden]{display:none}
+#camCard{width:100%;max-width:420px;background:#E6E1D7;color:#111;border-radius:28px;padding:14px;animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
+#camVideo{display:block;width:100%;max-height:60vh;border-radius:18px;background:#000;object-fit:cover}
+.camBar{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+#camShot{width:64px;height:64px;border-radius:50%;border:4px solid #111;background:#fff;box-shadow:inset 0 0 0 4px #E6E1D7;cursor:pointer;transition:transform .12s}
+#camShot:active{transform:scale(.9)}
+#camErr{margin:8px 0 0;font-size:13px;color:#a1261b;min-height:1em;text-align:center}
+#photoDlg{position:fixed;inset:0;z-index:1850;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px;animation:rfade .2s}
+#photoDlg[hidden]{display:none}
+#phCard{max-width:min(92vw,520px);background:#E6E1D7;color:#111;border-radius:26px;padding:10px;box-shadow:0 10px 40px rgba(0,0,0,.5);animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
+#phMsg{padding:22px 28px;font-weight:600}
+#phImg{display:block;max-width:100%;max-height:70vh;border-radius:18px;animation:reveal .8s ease-out}
+#phImg[hidden],#phMsg[hidden]{display:none}
+@keyframes reveal{from{opacity:0;filter:blur(16px) saturate(1.8);transform:scale(.9)}to{opacity:1;filter:none;transform:none}}
+.bw{display:flex;flex-direction:column;align-items:center;width:220px}
+.bw .photoBtn{position:relative;overflow:hidden;margin-bottom:6px;border:0;border-radius:999px;padding:9px 22px;font-weight:800;font-size:14px;color:#3a1d00;background:linear-gradient(135deg,#ffe29a,#ffb347 55%,#ff8a3c);box-shadow:0 0 0 2px rgba(255,255,255,.55),0 6px 18px rgba(255,150,40,.45);cursor:pointer;animation:wiggle 2.6s ease-in-out infinite,glow 2.6s ease-in-out infinite}
+.photoBtn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.9),transparent);transform:skewX(-20deg);animation:sweep 2.6s ease-in-out infinite}
+@keyframes wiggle{0%,58%,100%{transform:rotate(0) scale(1)}62%{transform:rotate(-7deg) scale(1.07)}68%{transform:rotate(7deg) scale(1.07)}74%{transform:rotate(-5deg) scale(1.04)}80%{transform:rotate(5deg) scale(1.04)}86%{transform:rotate(-2deg)}}
+@keyframes glow{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.55),0 6px 18px rgba(255,150,40,.45)}60%{box-shadow:0 0 0 3px rgba(255,255,255,.95),0 6px 28px rgba(255,170,60,.95)}}
+@keyframes sweep{0%,50%{left:-60%}80%,100%{left:130%}}
+@media(prefers-reduced-motion:reduce){.bw .photoBtn,.photoBtn::after,#phImg{animation:none}}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -255,6 +285,11 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <div id="shapes" class="shapes" role="radiogroup"></div>
     <label for="text">Cosa vuoi dire di questo posto?</label>
     <textarea id="text" maxlength="280"></textarea>
+    <div class="camRow">
+      <button id="camBtn" type="button" class="camb off" aria-label="Aggiungi una foto"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.6"/></svg></button>
+      <span id="camHint">Aggiungi una foto (facoltativo)</span>
+      <span id="thumbBox" hidden><img id="thumb" alt="Anteprima della foto"><button id="thumbX" type="button" aria-label="Rimuovi la foto">×</button></span>
+    </div>
     <div class="row">
       <span id="count">0 / 280</span>
       <span><button class="b ghost" id="cancel" type="button">Annulla</button> <button class="b" id="send" type="button">Pubblica</button></span>
@@ -269,6 +304,13 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
 </div>
 <div id="readDlg" hidden><div id="rCard"><div id="rTx"></div><div id="rFt"></div></div></div>
 <div id="reactDlg" hidden><div id="rxCard"><div id="rxTitle">Reagisci al pensiero di <b id="rxName"></b></div><div class="rxRow" id="rxRow"></div></div></div>
+<input type="file" id="camFile" accept="image/*" capture="environment" hidden>
+<div id="camDlg" hidden><div id="camCard">
+  <video id="camVideo" playsinline autoplay muted></video>
+  <div class="camBar"><button class="kb" id="camCancel" type="button">Annulla</button><button id="camShot" type="button" aria-label="Scatta"></button><button class="kb" id="camFlip" type="button" aria-label="Cambia fotocamera">↺</button></div>
+  <p id="camErr"></p>
+</div></div>
+<div id="photoDlg" hidden><div id="phCard"><div id="phMsg">Carico la foto...</div><img id="phImg" alt="Foto del pensiero" hidden></div></div>
 <div id="toast" class="glass" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -401,9 +443,16 @@ function nameError(n){
   if (isOffensive(n)) return "Questo username non è consentito: scegline un altro.";
   return "";
 }
+async function changeName(oldN, n){
+  try{
+    const r = await fetch(SB_URL + "/rest/v1/rpc/change_username", {method: "POST", headers: H, body: JSON.stringify({p_old: oldN, p_new: n, p_token: voter()})});
+    if (!r.ok) return "error";
+    return (await r.json()) ? "ok" : "taken";
+  }catch(e){ return "error"; }
+}
 async function claimName(n){
   try{
-    const r = await fetch(SB_URL + "/rest/v1/usernames", {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({name: n})});
+    const r = await fetch(SB_URL + "/rest/v1/usernames", {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({name: n, token: voter()})});
     if (r.ok) return "ok";
     return r.status === 409 ? "taken" : "error";
   }catch(e){ return "error"; }
@@ -494,7 +543,7 @@ $("uSave").onclick = async () => {
   if (n === getUser()){ showCard(null); return; }
   btn.disabled = true; btn.textContent = "Controllo...";
   const same = getUser() && n.toLowerCase() === getUser().toLowerCase();
-  const res = same ? "ok" : await claimName(n);
+  const res = same ? "ok" : await changeName(getUser(), n);
   btn.disabled = false; btn.textContent = "Salva";
   if (res === "taken"){ uMsg.textContent = "Questo username esiste già: cercane un altro."; return; }
   if (res === "error"){ uMsg.textContent = "Non riesco a controllare lo username. Riprova."; return; }
@@ -714,7 +763,13 @@ function popupNode(t){
   const ft = document.createElement("div"); ft.className = "bft";
   const nm = document.createElement("span"); nm.className = "nm"; nm.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
   const more = document.createElement("span"); more.className = "more"; more.textContent = "leggi tutto";
-  ft.append(nm, more); d.append(sc, ft); return d;
+  ft.append(nm, more); d.append(sc, ft);
+  const w = document.createElement("div"); w.className = "bw";
+  if (t.has_photo){
+    const pb = document.createElement("button"); pb.type = "button"; pb.className = "photoBtn"; pb.textContent = "Scopri Foto!";
+    pb.onclick = () => openPhoto(t); w.append(pb);
+  }
+  w.append(d); return w;
 }
 let lastId = 0;
 function addThought(t, prepend){
@@ -764,12 +819,80 @@ map.on("click", e => {
   msg.textContent = ""; openPanel();
   if (!small) text.focus();
 });
+// ---- Foto: facoltativa, una sola, solo se c'è un messaggio
+let photo = null, camStream = null, camFacing = "environment";
+const camDlg = $("camDlg"), camVideo = $("camVideo"), photoCache = new Map();
+function stopCam(){ if (camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; } camVideo.srcObject = null; }
+function showPhoto(){ $("thumb").src = photo || ""; $("thumbBox").hidden = !photo; $("camHint").hidden = !!photo; }
+function clearPhoto(){ photo = null; showPhoto(); $("camBtn").classList.toggle("off", !text.value.trim()); }
+function compress(src, w, h){
+  const k = Math.min(1, 900 / Math.max(w, h)), c = document.createElement("canvas");
+  c.width = Math.round(w * k); c.height = Math.round(h * k); c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+  let q = .72, d = c.toDataURL("image/jpeg", q);
+  while (d.length > 380000 && q > .35){ q -= .1; d = c.toDataURL("image/jpeg", q); }
+  return d;
+}
+async function startCam(){
+  stopCam(); $("camErr").textContent = "";
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
+  try{
+    camStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: camFacing, width: {ideal: 1280}}, audio: false});
+    camVideo.srcObject = camStream; await camVideo.play().catch(() => {}); return true;
+  }catch(e){ return false; }
+}
+$("camBtn").onclick = async () => {
+  if (!text.value.trim()){ msg.textContent = "Scrivi prima il messaggio: la foto si può aggiungere solo a un pensiero."; return; }
+  camDlg.hidden = false;
+  if (!(await startCam())){ camDlg.hidden = true; $("camFile").click(); }
+};
+$("camShot").onclick = () => {
+  if (!camVideo.videoWidth) return;
+  photo = compress(camVideo, camVideo.videoWidth, camVideo.videoHeight); showPhoto(); stopCam(); camDlg.hidden = true;
+};
+$("camCancel").onclick = () => { stopCam(); camDlg.hidden = true; };
+$("camFlip").onclick = async () => {
+  camFacing = camFacing === "environment" ? "user" : "environment";
+  if (!(await startCam())) $("camErr").textContent = "Non riesco a cambiare fotocamera.";
+};
+$("camFile").onchange = e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  const img = new Image();
+  img.onload = () => { photo = compress(img, img.naturalWidth, img.naturalHeight); showPhoto(); URL.revokeObjectURL(img.src); };
+  img.src = URL.createObjectURL(f);
+};
+$("thumbX").onclick = clearPhoto;
+
+// Chi legge: "Scopri Foto!" mostra la foto con una piccola animazione
+async function openPhoto(t){
+  const dlg = $("photoDlg"), img = $("phImg"), ms = $("phMsg");
+  img.hidden = true; ms.hidden = false; ms.textContent = "Carico la foto..."; dlg.hidden = false;
+  try{
+    let d = photoCache.get(t.id);
+    if (!d){
+      const r = await fetch(SB_URL + "/rest/v1/photos?select=data&thought_id=eq." + t.id, {headers: H});
+      if (!r.ok) throw new Error(r.status);
+      const rows = await r.json();
+      if (!rows.length){ ms.textContent = "La foto non è più disponibile."; return; }
+      d = rows[0].data; photoCache.set(t.id, d);
+    }
+    if (dlg.hidden || !/^data:image\/jpeg;base64,/.test(d)) { if (!dlg.hidden) ms.textContent = "La foto non è disponibile."; return; }
+    img.onload = () => { ms.hidden = true; img.hidden = false; };
+    img.src = d;
+  }catch(e){ ms.textContent = "Non riesco a caricare la foto. Riprova."; }
+}
+$("photoDlg").addEventListener("pointerdown", e => { if (e.target.id === "photoDlg") $("photoDlg").hidden = true; });
+
 function closeForm(){
-  picked = null; text.value = ""; $("count").textContent = "0 / 280"; closePanel();
+  picked = null; text.value = ""; clearPhoto(); stopCam(); camDlg.hidden = true; $("count").textContent = "0 / 280"; closePanel();
   if (pickMarker){ map.removeLayer(pickMarker); pickMarker = null; }
 }
 $("cancel").onclick = closeForm;
-text.oninput = () => $("count").textContent = text.value.length + " / 280";
+text.oninput = () => {
+  $("count").textContent = text.value.length + " / 280";
+  const has = !!text.value.trim();
+  if (!has && photo) clearPhoto();
+  $("camBtn").classList.toggle("off", !has);
+};
 
 send.onclick = async () => {
   const message = text.value.trim();
@@ -780,11 +903,19 @@ send.onclick = async () => {
   send.disabled = true; msg.textContent = "Pubblico...";
   try{
     const r = await fetch(API, {method: "POST", headers: {...H, Prefer: "return=representation"},
-      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: getUser() || null, color: pick.color, shape: pick.shape})});
+      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: getUser() || null, color: pick.color, shape: pick.shape, has_photo: !!photo})});
     if (!r.ok) throw new Error(r.status);
     const [t] = await r.json();
     store.set(PK, today().key); store.set(MK, String(t.id));
+    const ph = photo;
     closeForm(); addThought(t, true); markers.get(t.id).openPopup(); toast("Pensiero pubblicato");
+    if (ph){
+      try{
+        const pr = await fetch(SB_URL + "/rest/v1/photos", {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({thought_id: t.id, data: ph})});
+        if (!pr.ok) throw new Error(pr.status);
+        photoCache.set(t.id, ph);
+      }catch(e){ toast("Il pensiero è online, ma la foto non è stata salvata"); }
+    }
   }catch(e){
     msg.textContent = "Non è stato possibile pubblicare. Riprova.";
   }
