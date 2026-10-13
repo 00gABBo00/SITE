@@ -135,20 +135,36 @@ input{margin-bottom:12px}
 .bubwrap .leaflet-popup-content-wrapper{background:transparent;box-shadow:none;border-radius:0;padding:0;transform-origin:50% 100%;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
 .bubwrap .leaflet-popup-content{margin:0;width:220px!important}
 .bubwrap .leaflet-popup-tip-container{display:none}
-.bub{position:relative;width:220px;height:132px;padding:22px var(--pr,34px) 0 var(--pl,34px);background:var(--shape) center/100% 100% no-repeat;color:var(--tc);display:flex;flex-direction:column}
-.bsc{height:56px;overflow:hidden;display:flex;flex-direction:column}
+.bub{position:relative;width:220px;padding:0 var(--pr,34px) 0 var(--pl,34px);background:var(--shape) center/100% 100% no-repeat;color:var(--tc);display:flex;flex-direction:column}
+.bub.one .btx{text-align:center}
+.bub.one .bft{justify-content:center}
+.rxp{position:absolute;left:50%;top:6px;pointer-events:none;z-index:3;line-height:1;animation:none!important}
+.bsc{overflow:hidden;display:flex;flex-direction:column}
 .bsc[data-over]{cursor:pointer}
-.btx{flex:none;margin:auto 0;font-size:14px;line-height:1.35;font-weight:600;overflow-wrap:anywhere}
+.btx{flex:none;margin:auto 0;font-size:14px;line-height:19px;font-weight:600;overflow-wrap:anywhere}
 .btx.run{margin:0;animation:scrollTxt var(--dur,6s) ease-in-out infinite alternate}
 @keyframes scrollTxt{0%,14%{transform:translateY(0)}86%,100%{transform:translateY(calc(var(--dist) * -1))}}
-.bft{display:flex;justify-content:space-between;gap:8px;margin-top:4px;font-size:11px;font-weight:700;white-space:nowrap;opacity:.85}
+.bft{display:flex;justify-content:space-between;gap:8px;margin-top:4px;height:14px;line-height:14px;font-size:11px;font-weight:700;white-space:nowrap;opacity:.85}
 .bft .nm{overflow:hidden;text-overflow:ellipsis}
 .bft .more{display:none;flex:none;text-decoration:underline}
 .bsc[data-over]+.bft .more{display:inline}
 #readDlg{position:fixed;inset:0;z-index:1850;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px;animation:rfade .2s}
 #readDlg[hidden]{display:none}
-#rCard{width:100%;max-width:340px;max-height:65vh;display:flex;flex-direction:column;background:#d4c3a1;color:var(--tc);border-radius:26px;padding:20px 22px;box-shadow:0 10px 40px rgba(0,0,0,.45);animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
+#rCard{width:100%;max-width:340px;max-height:65vh;display:flex;flex-direction:column;background:#d4c3a1;color:var(--tc);border-radius:26px;padding:20px 22px;box-shadow:0 10px 40px rgba(0,0,0,.45);position:relative;overflow:hidden;animation:rin .3s cubic-bezier(.2,.9,.3,1.15),floaty 5s ease-in-out .3s infinite}
 #rTx{overflow:auto;font-size:16px;line-height:1.45;font-weight:500;overflow-wrap:anywhere;white-space:pre-wrap}
+#rTx{animation:fadeUp .5s .15s backwards}
+#rCard::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.4) 50%,transparent 65%);transform:translateX(-120%);animation:shine 1.3s .3s ease-out forwards}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-4px) rotate(.4deg)}}
+@keyframes shine{to{transform:translateX(120%)}}
+@media(prefers-reduced-motion:reduce){#rCard::after{display:none}}
+#reactDlg{position:fixed;left:0;right:0;bottom:96px;z-index:1850;display:flex;justify-content:center;pointer-events:none}
+#reactDlg[hidden]{display:none}
+#rxCard{pointer-events:auto;background:#E6E1D7;color:#111;border-radius:28px;padding:12px 14px 10px;box-shadow:0 10px 36px rgba(0,0,0,.45);text-align:center;animation:rin .28s cubic-bezier(.2,.9,.3,1.2)}
+#rxTitle{font-size:12px;margin:0 0 6px}
+.rxRow{display:flex;gap:4px}
+.rxb{width:50px;height:50px;border:0;border-radius:50%;background:transparent;font-size:30px;line-height:1;cursor:pointer;transition:transform .15s}
+.rxb:hover{transform:scale(1.2) translateY(-3px)}
+.rxb:active{transform:scale(.9)}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -184,6 +200,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
         <li>Tocca un punto sulla mappa e scrivi un pensiero su quel posto.</li>
         <li>Puoi mettere un solo pallino al giorno: a mezzanotte sparisce e potrai metterne un altro.</li>
         <li>Tira giù la barra in alto per leggere i pensieri degli altri e raggiungerli sulla mappa.</li>
+        <li>Tocca due volte un pallino per reagire con un'emoji: chi ha scritto la vedrà saltare fuori dal suo messaggio.</li>
       </ul>
       <label for="uIn">Scegli il tuo username</label>
       <p style="font-size:14px">Firmerà i tuoi pensieri e verrà ricordato ogni volta che torni. Almeno 6 caratteri, con al massimo 2 tra numeri e trattini.</p>
@@ -251,6 +268,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
   <div id="tv">--:--:--</div>
 </div>
 <div id="readDlg" hidden><div id="rCard"><div id="rTx"></div><div id="rFt"></div></div></div>
+<div id="reactDlg" hidden><div id="rxCard"><div id="rxTitle">Reagisci al pensiero di <b id="rxName"></b></div><div class="rxRow" id="rxRow"></div></div></div>
 <div id="toast" class="glass" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -260,13 +278,13 @@ const SB_KEY = "sb_publishable_IbnSX5yMcc6KckO9nxJ9Yg_HBDbon4G";
 const API = SB_URL + "/rest/v1/thoughts";
 const H = {apikey: SB_KEY, "Content-Type": "application/json"};
 const $ = id => document.getElementById(id);
-const VK = "dreamapSeen2", PK = "dreamapPin2", UK = "dreamapUser3", UCK = "dreamapUserChanged3";
+const VK = "dreamapSeen2", PK = "dreamapPin2", UK = "dreamapUser3", UCK = "dreamapUserChanged3", MK = "dreamapMine3", RK = "dreamapReacted3", VRK = "dreamapVoter3";
 const store = {
   get: k => { try { return localStorage.getItem(k); } catch(e) { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
   del: k => { try { localStorage.removeItem(k); } catch(e) {} }
 };
-if (location.search.includes("reset")){ store.del(VK); store.del(PK); store.del(UK); store.del(UCK); history.replaceState(null, "", location.pathname); }
+if (location.search.includes("reset")){ store.del(VK); store.del(PK); store.del(UK); store.del(UCK); store.del(MK); store.del(RK); store.del(VRK); history.replaceState(null, "", location.pathname); }
 
 // Giorno corrente in ora italiana (la mezzanotte azzera i pallini)
 function today(){
@@ -538,15 +556,20 @@ const SAND = "#d4c3a1";
 // Colori del testo, complementari alla casella color sabbia (blu e toni profondi)
 const COLORS = [{v:"#1f2d5a",n:"Blu notte"},{v:"#2748b0",n:"Cobalto"},{v:"#17181c",n:"Inchiostro"},{v:"#14606b",n:"Petrolio"},{v:"#7a2638",n:"Bordeaux"},{v:"#2f5b3a",n:"Foresta"}];
 // Forme (tutte 220x132, stessa grandezza); pl/pr = margini del testo
+const TAIL = 24, LH = 19;
+// Ogni forma si disegna in base all'altezza h del corpo (si adatta a 1, 2 o 3 righe); pl/pr/pt/pb = margini del testo
 const SHAPES = [
-  {id:"smussato", n:"Smussato", pl:30, pr:30, svg:'<rect x="1" y="1" width="218" height="110" rx="32"/>'},
-  {id:"nuvoletta", n:"Nuvoletta", pl:30, pr:30, svg:'<rect x="1" y="1" width="218" height="110" rx="26"/><path d="M90 108C100 116 106 124 110 131C114 124 120 116 130 108Z"/>'},
-  {id:"pensiero", n:"Pensiero", pl:44, pr:44, svg:'<ellipse cx="110" cy="57" rx="86" ry="46"/><circle cx="58" cy="30" r="26"/><circle cx="162" cy="30" r="26"/><circle cx="30" cy="58" r="24"/><circle cx="190" cy="58" r="24"/><circle cx="58" cy="82" r="26"/><circle cx="162" cy="82" r="26"/><circle cx="104" cy="117" r="7.5"/><circle cx="111" cy="128" r="3.5"/>'},
-  {id:"pillola", n:"Pillola", pl:44, pr:44, svg:'<rect x="1" y="6" width="218" height="100" rx="50"/>'},
-  {id:"biglietto", n:"Biglietto", pl:28, pr:46, svg:'<path d="M6 6H214V43A13 13 0 0 0 214 69V106H6V69A13 13 0 0 0 6 43Z" stroke="#d4c3a1" stroke-width="10" stroke-linejoin="round"/><line x1="184" y1="16" x2="184" y2="96" stroke="#b39d6e" stroke-width="2" stroke-dasharray="4 5"/>'},
-  {id:"organica", n:"Organica", pl:42, pr:42, svg:'<path d="M44 14C86 0 148 4 186 20C218 34 218 80 192 98C158 114 84 114 44 100C8 84 8 32 44 14Z"/><path d="M110 131C101 123 101 113 110 110C119 113 119 123 110 131Z"/>'}
+  {id:"smussato", n:"Smussato", pl:30, pr:30, pt:14, pb:14, svg:h => `<rect x="1" y="1" width="218" height="${h-2}" rx="${Math.min(30,(h-2)/2)}"/>`},
+  {id:"nuvoletta", n:"Nuvoletta", pl:30, pr:30, pt:14, pb:14, svg:h => `<rect x="1" y="1" width="218" height="${h-2}" rx="${Math.min(24,(h-2)/2)}"/><path d="M90 ${h-4}C100 ${h+4} 106 ${h+12} 110 ${h+19}C114 ${h+12} 120 ${h+4} 130 ${h-4}Z"/>`},
+  {id:"pensiero", n:"Pensiero", pl:44, pr:44, pt:18, pb:18, svg:h => { const r = Math.min(26, h*.3), c = h/2;
+    return `<ellipse cx="110" cy="${c}" rx="86" ry="${c-4}"/>` + [[58,r+3],[162,r+3],[58,h-r-3],[162,h-r-3]].map(q => `<circle cx="${q[0]}" cy="${q[1]}" r="${r}"/>`).join("")
+      + `<circle cx="30" cy="${c}" r="${r*.92}"/><circle cx="190" cy="${c}" r="${r*.92}"/><circle cx="104" cy="${h+11}" r="7.5"/><circle cx="111" cy="${h+20}" r="3.5"/>`; }},
+  {id:"pillola", n:"Pillola", pl:44, pr:44, pt:12, pb:12, svg:h => `<rect x="1" y="2" width="218" height="${h-4}" rx="${(h-4)/2}"/>`},
+  {id:"biglietto", n:"Biglietto", pl:28, pr:46, pt:14, pb:14, svg:h => { const c = h/2;
+    return `<path d="M6 6H214V${c-13}A13 13 0 0 0 214 ${c+13}V${h-6}H6V${c+13}A13 13 0 0 0 6 ${c-13}Z" stroke="${SAND}" stroke-width="10" stroke-linejoin="round"/><line x1="184" y1="14" x2="184" y2="${h-14}" stroke="#b39d6e" stroke-width="2" stroke-dasharray="4 5"/>`; }},
+  {id:"organica", n:"Organica", pl:48, pr:48, pt:16, pb:16, svg:h => `<g transform="scale(1 ${h/112})"><path d="M44 14C86 0 148 4 186 20C218 34 218 80 192 98C158 114 84 114 44 100C8 84 8 32 44 14Z"/></g><path d="M110 ${h+21}C101 ${h+13} 101 ${h-1} 110 ${h-4}C119 ${h-1} 119 ${h+13} 110 ${h+21}Z"/>`}
 ];
-const svgUrl = sh => 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 132" fill="' + SAND + '">' + sh.svg + '</svg>') + '")';
+const svgUrl = (sh, h) => 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 ' + (h + TAIL) + '" fill="' + SAND + '">' + sh.svg(h) + '</svg>') + '")';
 let pick = {color: COLORS[0].v, shape: SHAPES[0].id};
 function refreshPick(){
   COLORS.forEach(c => c.el.setAttribute("aria-checked", c.v === pick.color));
@@ -561,7 +584,7 @@ COLORS.forEach(c => {
 SHAPES.forEach(sh => {
   const b = document.createElement("button"); b.type = "button"; b.className = "shp"; b.setAttribute("role", "radio");
   b.innerHTML = '<span class="th">Aa</span><span class="sn"></span>';
-  b.querySelector(".th").style.setProperty("--shape", svgUrl(sh)); b.querySelector(".sn").textContent = sh.n;
+  b.querySelector(".th").style.setProperty("--shape", svgUrl(sh, 106)); b.querySelector(".sn").textContent = sh.n;
   b.onclick = () => { pick.shape = sh.id; refreshPick(); }; $("shapes").append(b); sh.el = b;
 });
 refreshPick();
@@ -575,6 +598,70 @@ function tooClose(ll){
     if (map.distance(ll, q) < RADIUS_M || pt.distanceTo(map.latLngToContainerPoint(q)) < MIN_PX) return true;
   }
   return false;
+}
+const REACT_API = SB_URL + "/rest/v1/reactions";
+const KINDS = [{k:"cuore",e:"\u2764\uFE0F"},{k:"risata",e:"\u{1F602}"},{k:"wow",e:"\u{1F62E}"},{k:"triste",e:"\u{1F622}"},{k:"fuoco",e:"\u{1F525}"}];
+const reacted = () => { try { return new Set(JSON.parse(store.get(RK) || "[]")); } catch(e) { return new Set(); } };
+const markReacted = id => { const r = reacted(); r.add(id); store.set(RK, JSON.stringify([...r])); };
+function voter(){
+  let v = store.get(VRK);
+  if (!v){ const a = new Uint8Array(12); crypto.getRandomValues(a); v = [...a].map(x => x.toString(16).padStart(2, "0")).join(""); store.set(VRK, v); }
+  return v;
+}
+const rxDlg = $("reactDlg"); let rxTarget = null;
+function openReact(t){
+  if (String(t.id) === store.get(MK)){ toast("Non puoi reagire al tuo pensiero"); return; }
+  if (reacted().has(t.id)){ toast("Hai già reagito a questo pensiero"); return; }
+  rxTarget = t; $("rxName").textContent = t.nickname || "Anonimo";
+  rxDlg.hidden = true; void rxDlg.offsetWidth; rxDlg.hidden = false;
+}
+KINDS.forEach(k => {
+  const b = document.createElement("button"); b.type = "button"; b.className = "rxb"; b.textContent = k.e; b.setAttribute("aria-label", k.k);
+  b.onclick = async () => {
+    const t = rxTarget; rxDlg.hidden = true; if (!t) return;
+    try{
+      const r = await fetch(REACT_API, {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({thought_id: t.id, kind: k.k, voter: voter()})});
+      if (r.ok || r.status === 409){ markReacted(t.id); toast(r.ok ? "Reazione inviata " + k.e : "Hai già reagito a questo pensiero"); }
+      else throw new Error(r.status);
+    }catch(e){ toast("Non sono riuscito a inviare la reazione"); }
+  };
+  $("rxRow").append(b);
+});
+document.addEventListener("pointerdown", e => { if (!rxDlg.hidden && !e.target.closest("#rxCard")){ rxDlg.hidden = true; rxClosedAt = Date.now(); } });
+
+// Solo chi ha scritto vede le emoji uscire dal proprio messaggio, una reazione alla volta
+let sprayT = null, sprayId = 0;
+function stopSpray(){ clearTimeout(sprayT); sprayT = null; sprayId++; }
+function burst(box, kind, count){
+  const n = Math.min(16, 5 + count * 2);
+  for (let i = 0; i < n; i++){
+    const sp = document.createElement("span"); sp.className = "rxp"; sp.textContent = kind.e;
+    sp.style.fontSize = (18 + Math.random() * 14) + "px"; box.append(sp);
+    const dx = (Math.random() - .5) * 200, up = 70 + Math.random() * 90, fall = 20 + Math.random() * 50, rot = (Math.random() - .5) * 120;
+    const an = sp.animate([
+      {transform: "translate(-50%,0) scale(.3) rotate(0deg)", opacity: 0},
+      {transform: "translate(calc(-50% + " + dx * .55 + "px)," + (-up) + "px) scale(1.1) rotate(" + rot * .5 + "deg)", opacity: 1, offset: .38, easing: "cubic-bezier(.5,0,.9,.6)"},
+      {transform: "translate(calc(-50% + " + dx + "px)," + fall + "px) scale(.9) rotate(" + rot + "deg)", opacity: 0}
+    ], {duration: 1500 + Math.random() * 700, delay: i * 45, easing: "cubic-bezier(.2,.7,.4,1)", fill: "backwards"});
+    an.onfinish = () => sp.remove();
+  }
+}
+async function startSpray(pop, id){
+  stopSpray(); const my = ++sprayId;
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  let rows;
+  try{ const r = await fetch(REACT_API + "?select=kind&thought_id=eq." + id, {headers: H}); if (!r.ok) return; rows = await r.json(); }catch(e){ return; }
+  if (my !== sprayId) return;
+  const counts = {}; rows.forEach(x => counts[x.kind] = (counts[x.kind] || 0) + 1);
+  const kinds = KINDS.filter(x => counts[x.k]);
+  const el = pop.getElement(), box = el && el.querySelector(".bub");
+  if (!kinds.length || !box) return;
+  let i = 0;
+  const run = () => {
+    if (my !== sprayId || !box.isConnected) return;
+    const kd = kinds[i++ % kinds.length]; burst(box, kd, counts[kd.k]); sprayT = setTimeout(run, 2400);
+  };
+  sprayT = setTimeout(run, 600);
 }
 const CLOSE_MSG = "Troppo vicino a un altro pin: scegli un punto più in là o avvicina la mappa.";
 
@@ -608,12 +695,20 @@ let picked = null, pickMarker = null, total = 0;
 const markers = new Map();
 const fmt = d => new Date(d).toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit", timeZone: "Europe/Rome"});
 
+function textLines(msg, w){
+  const m = document.createElement("div");
+  m.style.cssText = "position:absolute;visibility:hidden;left:-9999px;top:0;font-size:14px;font-weight:600;line-height:" + LH + "px;overflow-wrap:anywhere;width:" + w + "px";
+  m.textContent = msg; document.body.append(m);
+  const n = Math.max(1, Math.round(m.offsetHeight / LH)); m.remove(); return n;
+}
 function popupNode(t){
   const sh = SHAPES.find(x => x.id === t.shape) || SHAPES[0], col = COLORS.some(c => c.v === t.color) ? t.color : COLORS[0].v;
-  const d = document.createElement("div"); d.className = "bub";
-  d.style.setProperty("--shape", svgUrl(sh)); d.style.setProperty("--tc", col);
+  const lines = textLines(t.message, 220 - sh.pl - sh.pr), th = Math.min(lines, 3) * LH, H = th + 18 + sh.pt + sh.pb;
+  const d = document.createElement("div"); d.className = "bub" + (lines === 1 ? " one" : "");
+  d.style.setProperty("--shape", svgUrl(sh, H)); d.style.setProperty("--tc", col);
   d.style.setProperty("--pl", sh.pl + "px"); d.style.setProperty("--pr", sh.pr + "px");
-  const sc = document.createElement("div"); sc.className = "bsc";
+  d.style.height = (H + TAIL) + "px"; d.style.paddingTop = sh.pt + "px";
+  const sc = document.createElement("div"); sc.className = "bsc"; sc.style.height = th + "px";
   const tx = document.createElement("div"); tx.className = "btx"; tx.textContent = t.message; sc.append(tx);
   sc.onclick = () => { if (sc.dataset.over) openRead(t, col); };
   const ft = document.createElement("div"); ft.className = "bft";
@@ -627,7 +722,14 @@ function addThought(t, prepend){
   if (markers.has(t.id)) return;
   const m = L.marker([t.lat, t.lng], {icon: icon(t.nickname)}).addTo(map).bindPopup(popupNode(t), POPUP_OPTS);
   markers.set(t.id, m); total++;
-  m.on("popupopen", ev => measure(ev.popup));
+  m.off("click", m._openPopup);
+  m.on("click", () => {           // un tocco apre il messaggio, due tocchi veloci aprono le reazioni
+    const now = Date.now();
+    if (m._lt && now - m._lt < 350){ clearTimeout(m._tm); m._lt = 0; openReact(t); }
+    else { m._lt = now; m._tm = setTimeout(() => { m._lt = 0; m.openPopup(); }, 280); }
+  });
+  m.on("popupopen", ev => { measure(ev.popup); if (String(t.id) === store.get(MK)) startSpray(ev.popup, t.id); });
+  m.on("popupclose", stopSpray);
   const li = document.createElement("li");
   const a = document.createElement("div"); a.className = "t"; a.textContent = t.message;
   const b = document.createElement("div"); b.className = "m"; b.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
@@ -649,10 +751,10 @@ async function load(){
   }
 }
 
-let justClosed = 0;
+let justClosed = 0, rxClosedAt = 0;
 map.on("popupclose", () => { justClosed = Date.now(); });
 map.on("click", e => {
-  if (Date.now() - justClosed < 300) return;
+  if (Date.now() - justClosed < 300 || Date.now() - rxClosedAt < 400) return;
   layMenu.hidden = true;
   if (dOpen){ openD(false); return; }
   if (hasPin()){ toast("Hai esaurito i pin per oggi"); return; }
@@ -681,7 +783,7 @@ send.onclick = async () => {
       body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: getUser() || null, color: pick.color, shape: pick.shape})});
     if (!r.ok) throw new Error(r.status);
     const [t] = await r.json();
-    store.set(PK, today().key);
+    store.set(PK, today().key); store.set(MK, String(t.id));
     closeForm(); addThought(t, true); markers.get(t.id).openPopup(); toast("Pensiero pubblicato");
   }catch(e){
     msg.textContent = "Non è stato possibile pubblicare. Riprova.";
