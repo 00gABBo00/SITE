@@ -292,6 +292,15 @@ input{margin-bottom:12px}
 .cmRow input{margin:0;flex:1;min-width:0;background:#E6E1D7;color:#2b2416;border:1px solid rgba(43,36,22,.25)}
 #cmSend{background:#1f2d5a}
 @media(prefers-reduced-motion:reduce){.dBtn,.sandList li{animation:none}.dBtn .dl{animation:none;opacity:1}}
+@keyframes buzzT{0%,56%,100%{translate:0 0}60%{translate:-6px 0}64%{translate:6px 0}68%{translate:-5px 0}72%{translate:5px 0}76%{translate:-3px 0}80%{translate:2px 0}84%{translate:0 0}}
+@keyframes buzzR{0%,56%,100%{rotate:0deg;scale:1}60%{rotate:-12deg;scale:1.12}64%{rotate:12deg;scale:1.12}68%{rotate:-9deg;scale:1.08}72%{rotate:9deg;scale:1.08}78%{rotate:-4deg;scale:1}}
+#drawer.buzz{animation:buzzT 2.8s ease-in-out infinite}
+#drawer.buzz .pill{background:#fff;opacity:1}
+#menuBtn.buzz,.dBtn.buzz .di{animation:buzzR 2.4s ease-in-out infinite}
+#nfList .who{cursor:pointer;text-decoration:underline;text-underline-offset:2px}
+.nfChat{display:block;margin-top:8px;border:0;border-radius:999px;padding:6px 14px;background:#1f2d5a;color:#E6E1D7;font-weight:700;font-size:13px;cursor:pointer;transition:transform .15s}
+.nfChat:active{transform:scale(.94)}
+@media(prefers-reduced-motion:reduce){#drawer.buzz,#menuBtn.buzz,.dBtn.buzz .di{animation:none}}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -456,7 +465,9 @@ const store = {
   set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
   del: k => { try { localStorage.removeItem(k); } catch(e) {} }
 };
-if (location.search.includes("reset")){ store.del(VK); store.del(PK); store.del(UK); store.del(UCK); store.del(MK); store.del(RK); store.del(VRK); history.replaceState(null, "", location.pathname); }
+if (location.search.includes("reset")){
+  const _u = store.get(UK), _t = store.get(VRK);
+  if (_u && _t) fetch(SB_URL + "/rest/v1/rpc/release_username", {method: "POST", headers: H, body: JSON.stringify({p_name: _u, p_token: _t})}).catch(() => {}); store.del(VK); store.del(PK); store.del(UK); store.del(UCK); store.del(MK); store.del(RK); store.del(VRK); history.replaceState(null, "", location.pathname); }
 
 // Giorno corrente in ora italiana (la mezzanotte azzera i pallini)
 function today(){
@@ -644,15 +655,24 @@ function drawMenu(){
 drawMenu();
 const menuPop = $("menuPop"), menuBtn = $("menuBtn"), menuDrop = $("menuDrop");
 function setMenu(o){ menuPop.classList.toggle("show", o); }
-let dropT = null;
+let dropT = null, notifUnread = 0;
+const dropShown = () => !menuDrop.hidden && !menuDrop.classList.contains("out");
+function updateBuzz(){
+  const u = notifUnread > 0, ds = dropShown();
+  drawer.classList.toggle("buzz", u && !dOpen);
+  menuBtn.classList.toggle("buzz", u && dOpen && !ds);
+  document.querySelector('.dBtn[data-act="notif"]').classList.toggle("buzz", u && ds);
+}
 function setDrop(o){
   clearTimeout(dropT); menuBtn.classList.toggle("open", o); menuBtn.setAttribute("aria-expanded", o);
   if (o){ menuDrop.classList.remove("out"); menuDrop.hidden = false; }
   else if (!menuDrop.hidden){ menuDrop.classList.add("out"); dropT = setTimeout(() => { menuDrop.hidden = true; menuDrop.classList.remove("out"); }, 300); }
+  updateBuzz();
 }
 function closeAllMenus(){
   setMenu(false); layMenu.hidden = true; clearTimeout(dropT);
   menuDrop.hidden = true; menuDrop.classList.remove("out"); menuBtn.classList.remove("open"); menuBtn.setAttribute("aria-expanded", false);
+  updateBuzz();
 }
 menuBtn.onclick = () => { const o = menuDrop.hidden || menuDrop.classList.contains("out"); layMenu.hidden = true; setMenu(false); setDrop(o); };
 menuDrop.addEventListener("click", e => {
@@ -704,7 +724,7 @@ const drawer = $("drawer"), dGrip = $("dGrip");
 let dOpen = false, dd = null;
 const closedY = () => -(drawer.offsetHeight - 24);
 function setY(y, snap){ drawer.classList.toggle("snap", !!snap); drawer.style.transform = "translateY(" + y + "px)"; }
-function openD(o){ dOpen = o; if (!o) closeAllMenus(); setY(o ? 0 : closedY(), true); }
+function openD(o){ dOpen = o; if (!o) closeAllMenus(); updateBuzz(); setY(o ? 0 : closedY(), true); }
 setY(closedY());
 addEventListener("resize", () => setY(dOpen ? 0 : closedY()));
 dGrip.addEventListener("pointerdown", e => {
@@ -1198,8 +1218,16 @@ $("cmTg").addEventListener("click", e => { const b = e.target.closest(".tg"); if
 $("cmClose").onclick = () => { $("cmDlg").hidden = true; cmT = null; };
 $("cmDlg").addEventListener("pointerdown", e => { if (e.target.id === "cmDlg"){ $("cmDlg").hidden = true; cmT = null; } });
 
+async function chatFromNotif(n){
+  const mine = store.get(MK); if (!mine) return;
+  try{
+    const r = await api("chat_open_notif", {p_thought: +mine, p_token: voter(), p_src: n.t, p_src_id: n.rid});
+    $("notifDlg").hidden = true;
+    await openConv({id: r.id, name: r.name, created: r.created_at, now: r.now});
+  }catch(e){ toast("Non riesco ad aprire la chat"); }
+}
 let notifs = [], lastUnreadN = null, nfPrev = 0;
-function setBadge(n){ $("bellBadge").textContent = n; $("bellBadge").classList.toggle("zero", n === 0); $("menuDot").hidden = n === 0; }
+function setBadge(n){ $("bellBadge").textContent = n; $("bellBadge").classList.toggle("zero", n === 0); $("menuDot").hidden = n === 0; notifUnread = n; updateBuzz(); }
 function drawNotifs(){
   const ul = $("nfList"); ul.innerHTML = "";
   if (!notifs.length){ const e = li("soft"); e.textContent = "Nessuna notifica per ora. Le reazioni e i commenti al tuo pensiero compariranno qui."; ul.append(e); return; }
@@ -1213,7 +1241,10 @@ function drawNotifs(){
       const em = (KINDS.find(x => x.k === n.kind) || {}).e || "";
       txt.textContent = " ha reagito " + em + " al tuo pensiero"; l.append(who, txt);
     }
-    tm.className = "tm"; tm.textContent = fmt(n.at); l.append(tm); ul.append(l);
+    tm.className = "tm"; tm.textContent = fmt(n.at); l.append(tm);
+    const cb = document.createElement("button"); cb.type = "button"; cb.className = "nfChat";
+    cb.textContent = "Chatta con " + (n.name || "lui"); cb.onclick = () => chatFromNotif(n); who.onclick = cb.onclick;
+    l.append(cb); ul.append(l);
   });
 }
 function openNotifs(){
@@ -1234,11 +1265,11 @@ async function refreshNotifs(){
       fetch(base + "reactions?select=id,created_at,kind,name&thought_id=eq." + id + since, {headers: H})]);
     const cs = rc.ok ? await rc.json() : [], rs = rr.ok ? await rr.json() : [];
     notifs = [].concat(
-      cs.map(c => ({t: "c", at: Date.parse(c.created_at), name: c.name, target: c.target, body: c.body})),
-      rs.map(r => ({t: "r", at: Date.parse(r.created_at), name: r.name, kind: r.kind}))).sort((a, b) => b.at - a.at);
+      cs.map(c => ({t: "c", rid: c.id, at: Date.parse(c.created_at), name: c.name, target: c.target, body: c.body})),
+      rs.map(r => ({t: "r", rid: r.id, at: Date.parse(r.created_at), name: r.name, kind: r.kind}))).sort((a, b) => b.at - a.at);
     const seen = +store.get(NK) || 0, unread = $("notifDlg").hidden ? notifs.filter(n => n.at > seen).length : 0;
     setBadge(unread);
-    if (lastUnreadN !== null && unread > lastUnreadN) toast("Nuova notifica");
+    if (lastUnreadN !== null && unread > lastUnreadN){ toast("Nuova notifica"); if (navigator.vibrate) navigator.vibrate([80, 60, 80]); }
     lastUnreadN = unread;
     if (!$("notifDlg").hidden) drawNotifs();
   }catch(e){}
@@ -1246,6 +1277,25 @@ async function refreshNotifs(){
 setInterval(refreshNotifs, 6000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshNotifs(); });
 refreshNotifs();
+
+// ---- Azzeramento globale: quando sul server si lancia reset_all(), anche questo dispositivo ricomincia da zero
+const EK = "dreamapEpoch3";
+function wipeLocal(){ try{ Object.keys(localStorage).filter(k => k.startsWith("dreamap")).forEach(k => localStorage.removeItem(k)); }catch(e){} }
+async function checkEpoch(){
+  try{
+    const r = await fetch(SB_URL + "/rest/v1/app_state?select=epoch&id=eq.1", {headers: H});
+    if (!r.ok) return;
+    const rows = await r.json(); if (!rows.length) return;
+    const ep = String(rows[0].epoch), mine = store.get(EK);
+    if (mine === null){
+      if (+ep > 1 && store.get(UK)){ wipeLocal(); store.set(EK, ep); location.reload(); return; }
+      store.set(EK, ep);
+    } else if (mine !== ep){ wipeLocal(); store.set(EK, ep); location.reload(); }
+  }catch(e){}
+}
+setInterval(checkEpoch, 20000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkEpoch(); });
+checkEpoch();
 
 // Chi legge: "Scopri Foto!" mostra la foto con una piccola animazione
 async function openPhoto(t){
