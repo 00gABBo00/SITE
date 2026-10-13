@@ -49,7 +49,7 @@ button{font:inherit;color:var(--fg)}
 #menuBtn.open i:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 #menuBtn.open i:nth-child(2){opacity:0;transform:scaleX(0)}
 #menuBtn.open i:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-#layMenu{position:absolute;top:62px;left:12px;z-index:5;border-radius:18px;padding:6px;min-width:150px;background:#2a5f35;box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#layMenu{position:absolute;top:62px;right:12px;transform-origin:top right;animation:iconIn .3s cubic-bezier(.2,1.3,.4,1);z-index:5;border-radius:18px;padding:6px;min-width:150px;background:#2a5f35;box-shadow:0 6px 24px rgba(0,0,0,.4)}
 #dBody{flex:1;overflow:auto;padding:8px 16px 6px;-webkit-overflow-scrolling:touch}
 #dGrip{height:24px;flex:none;cursor:grab;touch-action:none;display:flex;align-items:center;justify-content:center}
 #list{list-style:none;margin:0;padding:0}
@@ -252,6 +252,46 @@ input{margin-bottom:12px}
 #chThumb{border-color:#1f2d5a}
 #chThumbX{background:#1f2d5a;color:#fff}
 #chatFab{background:#d4c3a1;color:#1f2d5a}
+.sp{flex:none;width:44px;height:44px}
+#menuBtn{position:relative}
+#menuDot{position:absolute;top:-5px;right:-5px;width:13px;height:13px;border-radius:50%;background:#d93a3a;border:2px solid #347641}
+#menuDot[hidden]{display:none}
+#menuDrop{position:absolute;top:58px;right:14px;z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+#menuDrop[hidden]{display:none}
+.dBtn{display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:0;cursor:pointer;color:var(--fg);transform-origin:right center;animation:iconIn .5s cubic-bezier(.2,1.5,.4,1) both;animation-delay:calc(var(--i) * 75ms)}
+.dBtn .dl{font-size:13px;font-weight:700;padding:5px 12px;border-radius:999px;background:rgba(0,0,0,.3);opacity:0;animation:lblIn .3s ease-out forwards;animation-delay:calc(var(--i) * 75ms + 230ms)}
+.dBtn .di{position:relative;width:46px;height:46px;border-radius:50%;background:#E6E1D7;color:#111;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.35);transition:transform .15s}
+.dBtn:hover .di{transform:scale(1.08)}
+.dBtn:active .di{transform:scale(.9)}
+#menuDrop.out .dBtn{animation:iconOut .2s ease-in both;animation-delay:calc((2 - var(--i)) * 45ms)}
+#menuDrop.out .dl{animation:none;opacity:0}
+.dBadge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#d93a3a;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.dBadge.zero{background:rgba(0,0,0,.6)}
+@keyframes iconIn{from{opacity:0;transform:translateY(-18px) scale(.3) rotate(-45deg)}to{opacity:1;transform:none}}
+@keyframes iconOut{to{opacity:0;transform:translateY(-14px) scale(.3) rotate(30deg)}}
+@keyframes lblIn{from{opacity:0;transform:translateX(12px)}to{opacity:1;transform:none}}
+.sandDlg{position:fixed;inset:0;z-index:1840;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:16px;animation:rfade .2s}
+.sandDlg[hidden]{display:none}
+.sandCard{width:100%;max-width:400px;max-height:76vh;display:flex;flex-direction:column;background:#d4c3a1;color:#2b2416;border-radius:28px;box-shadow:0 10px 40px rgba(0,0,0,.45);animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
+.sandHead{display:flex;align-items:center;justify-content:space-between;padding:16px 14px 6px 24px}
+.sandHead h3{margin:0;font-size:20px;color:#2b2416}
+.sandHead button{width:40px;height:40px;border:0;border-radius:50%;background:transparent;color:#2b2416;font-size:24px;line-height:1;cursor:pointer}
+.sandList{list-style:none;margin:0;padding:6px 14px 14px;overflow:auto}
+.sandList li{padding:11px 14px;margin-bottom:8px;border-radius:18px;background:#E6E1D7;color:#2b2416;font-size:14px;line-height:1.35;overflow-wrap:anywhere;animation:fadeUp .35s backwards;animation-delay:calc(var(--i,0) * 45ms)}
+.sandList li.soft{background:transparent;padding:6px 8px;color:#5b4f38}
+.sandList li.new{box-shadow:inset 4px 0 0 #1f2d5a}
+.sandList .who{font-weight:800}
+.sandList .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;background:#d4c3a1;margin-left:4px;white-space:nowrap}
+.sandList .tm{font-size:11px;opacity:.7;margin-top:3px}
+.cmNote{margin:0;padding:0 24px 10px;font-size:13px;font-weight:600;color:#5b4f38}
+.cmForm{padding:0 16px 16px;display:flex;flex-direction:column;gap:8px}
+.cmForm[hidden],.cmTg[hidden]{display:none}
+.cmTg,.cmRow{display:flex;gap:8px}
+.tg{border:1.5px solid #1f2d5a;background:transparent;color:#1f2d5a;border-radius:999px;padding:6px 14px;font-weight:700;font-size:14px;cursor:pointer;transition:background .2s,color .2s}
+.tg.on{background:#1f2d5a;color:#E6E1D7}
+.cmRow input{margin:0;flex:1;min-width:0;background:#E6E1D7;color:#2b2416;border:1px solid rgba(43,36,22,.25)}
+#cmSend{background:#1f2d5a}
+@media(prefers-reduced-motion:reduce){.dBtn,.sandList li{animation:none}.dBtn .dl{animation:none;opacity:1}}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -301,9 +341,14 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
 
 <div id="drawer" class="glass">
   <div class="dHead">
-    <button id="layBtn" aria-label="Tipo di mappa"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg></button>
+    <span class="sp"></span>
     <h2>Pensieri di oggi</h2>
-    <button id="menuBtn" aria-label="Menu"><i></i><i></i><i></i></button>
+    <button id="menuBtn" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i><span id="menuDot" hidden></span></button>
+    <div id="menuDrop" hidden>
+      <button class="dBtn" style="--i:0" data-act="notif" aria-label="Notifiche"><span class="dl">Notifiche</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><b id="bellBadge" class="dBadge zero">0</b></span></button>
+      <button class="dBtn" style="--i:1" data-act="map" aria-label="Tipo di mappa"><span class="dl">Mappa</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg></span></button>
+      <button class="dBtn" style="--i:2" data-act="user" aria-label="Username"><span class="dl">Username</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span></button>
+    </div>
     <div id="layMenu" hidden></div>
     <div id="menuPop">
       <div class="mrow"><button id="userItem" type="button">USERNAME</button><span class="mq">vuoi cambiarlo?</span></div>
@@ -381,6 +426,19 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
       <input id="chInput" maxlength="500" placeholder="Scrivi un messaggio" autocomplete="off">
       <button id="chSend" class="kb" type="button" disabled>Invia</button>
     </div>
+  </div>
+</div></div>
+<div id="notifDlg" class="sandDlg" hidden><div class="sandCard">
+  <div class="sandHead"><h3>Notifiche</h3><button id="nfClose" aria-label="Chiudi">×</button></div>
+  <ul id="nfList" class="sandList"></ul>
+</div></div>
+<div id="cmDlg" class="sandDlg" hidden><div class="sandCard">
+  <div class="sandHead"><h3>Commenti</h3><button id="cmClose" aria-label="Chiudi">×</button></div>
+  <ul id="cmList" class="sandList"></ul>
+  <p id="cmNote" class="cmNote"></p>
+  <div id="cmForm" class="cmForm" hidden>
+    <div id="cmTg" class="cmTg"><button type="button" class="tg on" data-t="pensiero">Sul pensiero</button><button type="button" class="tg" data-t="foto">Sulla foto</button></div>
+    <div class="cmRow"><input id="cmInput" maxlength="140" placeholder="Il tuo commento" autocomplete="off"><button id="cmSend" class="kb" type="button">Invia</button></div>
   </div>
 </div></div>
 <div id="toast" class="glass" role="status"></div>
@@ -584,12 +642,31 @@ function drawMenu(){
   });
 }
 drawMenu();
-const menuPop = $("menuPop"), menuBtn = $("menuBtn");
-function setMenu(o){ menuPop.classList.toggle("show", o); menuBtn.classList.toggle("open", o); menuBtn.setAttribute("aria-expanded", o); }
-$("layBtn").onclick = () => { setMenu(false); layMenu.hidden = !layMenu.hidden; };
-menuBtn.onclick = () => { layMenu.hidden = true; setMenu(!menuPop.classList.contains("show")); };
+const menuPop = $("menuPop"), menuBtn = $("menuBtn"), menuDrop = $("menuDrop");
+function setMenu(o){ menuPop.classList.toggle("show", o); }
+let dropT = null;
+function setDrop(o){
+  clearTimeout(dropT); menuBtn.classList.toggle("open", o); menuBtn.setAttribute("aria-expanded", o);
+  if (o){ menuDrop.classList.remove("out"); menuDrop.hidden = false; }
+  else if (!menuDrop.hidden){ menuDrop.classList.add("out"); dropT = setTimeout(() => { menuDrop.hidden = true; menuDrop.classList.remove("out"); }, 300); }
+}
+function closeAllMenus(){
+  setMenu(false); layMenu.hidden = true; clearTimeout(dropT);
+  menuDrop.hidden = true; menuDrop.classList.remove("out"); menuBtn.classList.remove("open"); menuBtn.setAttribute("aria-expanded", false);
+}
+menuBtn.onclick = () => { const o = menuDrop.hidden || menuDrop.classList.contains("out"); layMenu.hidden = true; setMenu(false); setDrop(o); };
+menuDrop.addEventListener("click", e => {
+  const b = e.target.closest(".dBtn"); if (!b) return;
+  const a = b.dataset.act; setDrop(false);
+  if (a === "map"){ setMenu(false); layMenu.hidden = false; }
+  else if (a === "user"){ layMenu.hidden = true; setMenu(true); }
+  else if (a === "notif"){ layMenu.hidden = true; setMenu(false); openNotifs(); }
+});
 document.addEventListener("pointerdown", e => {
-  if (menuPop.classList.contains("show") && !e.target.closest("#menuPop,#menuBtn")) setMenu(false);
+  if (e.target.closest("#menuPop,#menuBtn,#menuDrop,#layMenu")) return;
+  if (menuPop.classList.contains("show")) setMenu(false);
+  if (!layMenu.hidden) layMenu.hidden = true;
+  if (!menuDrop.hidden) setDrop(false);
 });
 
 // Cambio username: USERNAME -> "sei sicuro?" -> casella di testo (una volta al giorno)
@@ -627,7 +704,7 @@ const drawer = $("drawer"), dGrip = $("dGrip");
 let dOpen = false, dd = null;
 const closedY = () => -(drawer.offsetHeight - 24);
 function setY(y, snap){ drawer.classList.toggle("snap", !!snap); drawer.style.transform = "translateY(" + y + "px)"; }
-function openD(o){ dOpen = o; if (!o){ layMenu.hidden = true; setMenu(false); } setY(o ? 0 : closedY(), true); }
+function openD(o){ dOpen = o; if (!o) closeAllMenus(); setY(o ? 0 : closedY(), true); }
 setY(closedY());
 addEventListener("resize", () => setY(dOpen ? 0 : closedY()));
 dGrip.addEventListener("pointerdown", e => {
@@ -741,7 +818,7 @@ KINDS.forEach(k => {
   b.onclick = async () => {
     const t = rxTarget; rxDlg.hidden = true; if (!t) return;
     try{
-      const r = await fetch(REACT_API, {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({thought_id: t.id, kind: k.k, voter: voter()})});
+      const r = await fetch(REACT_API, {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({thought_id: t.id, kind: k.k, voter: voter(), name: getUser() || null})});
       if (r.ok || r.status === 409){ markReacted(t.id); toast(r.ok ? "Reazione inviata " + k.e : "Hai già reagito a questo pensiero"); }
       else throw new Error(r.status);
     }catch(e){ toast("Non sono riuscito a inviare la reazione"); }
@@ -846,6 +923,7 @@ function popupNode(t){
   if (t.has_photo) mk("photoBtn", "Scopri Foto!", "", () => openPhoto(t));
   if (mine && !t.has_photo) mk("miniBtn", "Aggiungi foto", ICON_CAM, () => openCam(d2 => addPhotoLater(t, d2)));
   if (!mine) mk("miniBtn", "Chatta", ICON_CHAT, () => startChat(t));
+  mk("miniBtn", "Commenti", ICON_CMT, () => openComments(t));
   if (bar.children.length) w.append(bar);
   w.append(d); return w;
 }
@@ -888,7 +966,7 @@ let justClosed = 0, rxClosedAt = 0;
 map.on("popupclose", () => { justClosed = Date.now(); });
 map.on("click", e => {
   if (Date.now() - justClosed < 300 || Date.now() - rxClosedAt < 400) return;
-  layMenu.hidden = true;
+  closeAllMenus();
   if (dOpen){ openD(false); return; }
   if (hasPin()){ toast("Hai esaurito i pin per oggi"); return; }
   if (tooClose(e.latlng)){ toast(CLOSE_MSG); return; }
@@ -1071,6 +1149,103 @@ async function refreshChats(){
 setInterval(refreshChats, 5000); setInterval(pollConv, 3000); setInterval(updateComposer, 1000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshChats(); });
 refreshChats();
+
+// ---- Commenti (uno a testa: sul pensiero oppure sulla foto) e notifiche
+const ICON_CMT = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4V5Z"/><path d="M8 9h8M8 12h5"/></svg>';
+const CMK = "dreamapCommented3", NK = "dreamapNotifSeen3";
+const commented = () => { try { return new Set(JSON.parse(store.get(CMK) || "[]")); } catch(e) { return new Set(); } };
+let cmT = null, cmTarget = "pensiero";
+function setTarget(t){ cmTarget = t; document.querySelectorAll("#cmTg .tg").forEach(b => b.classList.toggle("on", b.dataset.t === t)); }
+function li(cls, i){ const l = document.createElement("li"); if (cls) l.className = cls; l.style.setProperty("--i", i || 0); return l; }
+async function loadComments(){
+  const ul = $("cmList"), t = cmT;
+  ul.innerHTML = ""; const w = li("soft"); w.textContent = "Carico..."; ul.append(w);
+  try{
+    const r = await fetch(SB_URL + "/rest/v1/comments?select=id,created_at,target,body,name&order=created_at.asc&thought_id=eq." + t.id, {headers: H});
+    if (!r.ok) throw new Error(r.status);
+    const rows = await r.json(); if (t !== cmT) return;
+    ul.innerHTML = "";
+    if (!rows.length){ const e = li("soft"); e.textContent = "Ancora nessun commento."; ul.append(e); return; }
+    rows.forEach((c, i) => {
+      const l = li("", i), who = document.createElement("span"), tag = document.createElement("span"), body = document.createElement("div"), tm = document.createElement("div");
+      who.className = "who"; who.textContent = c.name || "Anonimo";
+      tag.className = "tag"; tag.textContent = c.target === "foto" ? "sulla foto" : "sul pensiero";
+      body.textContent = c.body; tm.className = "tm"; tm.textContent = fmt(c.created_at);
+      l.append(who, tag, body, tm); ul.append(l);
+    });
+  }catch(e){ ul.innerHTML = ""; const x = li("soft"); x.textContent = "Non riesco a caricare i commenti."; ul.append(x); }
+}
+function openComments(t){
+  cmT = t; const mine = String(t.id) === store.get(MK), done = commented().has(t.id);
+  $("cmForm").hidden = mine || done;
+  $("cmNote").textContent = mine ? "Qui vedi i commenti che gli altri hanno lasciato." : done ? "Hai già lasciato il tuo commento." : "Puoi lasciare un solo commento" + (t.has_photo ? ": scegli se sul pensiero o sulla foto." : ".");
+  $("cmTg").hidden = !t.has_photo; setTarget("pensiero"); $("cmInput").value = ""; $("cmDlg").hidden = false; loadComments();
+}
+$("cmSend").onclick = async () => {
+  const body = $("cmInput").value.trim(), t = cmT, btn = $("cmSend");
+  if (!body || !t) return;
+  btn.disabled = true;
+  try{
+    const ok = await api("post_comment", {p_thought: t.id, p_target: cmTarget, p_body: body, p_name: getUser() || "Anonimo", p_token: voter()});
+    const c = commented(); c.add(t.id); store.set(CMK, JSON.stringify([...c]));
+    toast(ok ? "Commento inviato" : "Hai già commentato questo pensiero");
+    if (t === cmT){ $("cmForm").hidden = true; $("cmNote").textContent = "Hai già lasciato il tuo commento."; loadComments(); }
+  }catch(e){ toast("Non sono riuscito a inviare il commento"); }
+  btn.disabled = false;
+};
+$("cmInput").addEventListener("keydown", e => { if (e.key === "Enter") $("cmSend").click(); });
+$("cmTg").addEventListener("click", e => { const b = e.target.closest(".tg"); if (b) setTarget(b.dataset.t); });
+$("cmClose").onclick = () => { $("cmDlg").hidden = true; cmT = null; };
+$("cmDlg").addEventListener("pointerdown", e => { if (e.target.id === "cmDlg"){ $("cmDlg").hidden = true; cmT = null; } });
+
+let notifs = [], lastUnreadN = null, nfPrev = 0;
+function setBadge(n){ $("bellBadge").textContent = n; $("bellBadge").classList.toggle("zero", n === 0); $("menuDot").hidden = n === 0; }
+function drawNotifs(){
+  const ul = $("nfList"); ul.innerHTML = "";
+  if (!notifs.length){ const e = li("soft"); e.textContent = "Nessuna notifica per ora. Le reazioni e i commenti al tuo pensiero compariranno qui."; ul.append(e); return; }
+  notifs.forEach((n, i) => {
+    const l = li(n.at > nfPrev ? "new" : "", i), who = document.createElement("span"), txt = document.createElement("span"), tm = document.createElement("div");
+    who.className = "who"; who.textContent = n.name || "Qualcuno";
+    if (n.t === "c"){
+      txt.textContent = " ha commentato " + (n.target === "foto" ? "la tua foto" : "il tuo pensiero");
+      const q = document.createElement("div"); q.textContent = "«" + n.body + "»"; l.append(who, txt, q);
+    } else {
+      const em = (KINDS.find(x => x.k === n.kind) || {}).e || "";
+      txt.textContent = " ha reagito " + em + " al tuo pensiero"; l.append(who, txt);
+    }
+    tm.className = "tm"; tm.textContent = fmt(n.at); l.append(tm); ul.append(l);
+  });
+}
+function openNotifs(){
+  nfPrev = +store.get(NK) || 0; drawNotifs(); $("notifDlg").hidden = false;
+  if (notifs.length) store.set(NK, String(Math.max(nfPrev, notifs[0].at)));
+  setBadge(0); lastUnreadN = 0;
+}
+$("nfClose").onclick = () => { $("notifDlg").hidden = true; };
+$("notifDlg").addEventListener("pointerdown", e => { if (e.target.id === "notifDlg") $("notifDlg").hidden = true; });
+async function refreshNotifs(){
+  if (document.hidden) return;
+  const id = store.get(MK);
+  if (!id){ notifs = []; setBadge(0); return; }
+  try{
+    const since = "&created_at=gte." + encodeURIComponent(today().start.toISOString()), base = SB_URL + "/rest/v1/";
+    const [rc, rr] = await Promise.all([
+      fetch(base + "comments?select=id,created_at,target,body,name&thought_id=eq." + id + since, {headers: H}),
+      fetch(base + "reactions?select=id,created_at,kind,name&thought_id=eq." + id + since, {headers: H})]);
+    const cs = rc.ok ? await rc.json() : [], rs = rr.ok ? await rr.json() : [];
+    notifs = [].concat(
+      cs.map(c => ({t: "c", at: Date.parse(c.created_at), name: c.name, target: c.target, body: c.body})),
+      rs.map(r => ({t: "r", at: Date.parse(r.created_at), name: r.name, kind: r.kind}))).sort((a, b) => b.at - a.at);
+    const seen = +store.get(NK) || 0, unread = $("notifDlg").hidden ? notifs.filter(n => n.at > seen).length : 0;
+    setBadge(unread);
+    if (lastUnreadN !== null && unread > lastUnreadN) toast("Nuova notifica");
+    lastUnreadN = unread;
+    if (!$("notifDlg").hidden) drawNotifs();
+  }catch(e){}
+}
+setInterval(refreshNotifs, 6000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshNotifs(); });
+refreshNotifs();
 
 // Chi legge: "Scopri Foto!" mostra la foto con una piccola animazione
 async function openPhoto(t){
