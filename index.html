@@ -119,11 +119,18 @@ input{margin-bottom:12px}
 #tv{font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
 #tResize{position:absolute;top:7px;right:7px;width:22px;height:22px;padding:0;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.2);display:none;align-items:center;justify-content:center;cursor:nesw-resize;touch-action:none}
 @media (hover:hover) and (pointer:fine){#tResize{display:flex}}
-.dot{width:18px;height:18px;border-radius:50%;background:var(--accent);border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5)}
-.dot.new{background:var(--bg)}
+.pin{width:36px;height:36px;border-radius:50%;background:#E6E1D7;border:2.5px solid #111;color:#111;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:-.02em;box-shadow:0 2px 6px rgba(0,0,0,.45);animation:pinIn .45s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pinIn{from{transform:scale(0) translateY(-12px);opacity:0}to{transform:none;opacity:1}}
+@keyframes bubble{0%{opacity:0;transform:translateY(14px) scale(.35)}60%{opacity:1;transform:translateY(-3px) scale(1.06)}100%{opacity:1;transform:none}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .leaflet-popup-content-wrapper,.leaflet-popup-tip{background:var(--bg);color:var(--fg)}
-.leaflet-popup-content-wrapper{border-radius:18px}
+.leaflet-popup-content-wrapper{border-radius:20px;transform-origin:50% calc(100% + 20px);animation:bubble .45s cubic-bezier(.2,1.3,.4,1) backwards,bob 3.2s ease-in-out .5s infinite}
+.leaflet-popup-tip-container{transform-origin:50% 100%;animation:bubble .45s cubic-bezier(.2,1.3,.4,1) backwards,bob 3.2s ease-in-out .5s infinite}
 .leaflet-popup-content{font-family:inherit;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
+.leaflet-popup-content>div>*{animation:fadeUp .4s .18s backwards}
+.leaflet-popup-content small{display:block;margin-top:6px;font-weight:600}
+@media(prefers-reduced-motion:reduce){.pin,.leaflet-popup-content-wrapper,.leaflet-popup-tip-container,.leaflet-popup-content>div>*{animation:none}}
 .leaflet-container a.leaflet-popup-close-button{color:var(--fg)}
 button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 @media(max-width:760px){#panel{left:10px;right:10px;width:auto}#welcome h1{font-size:38px}}
@@ -144,7 +151,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
         <li>Tira giù la barra in alto per leggere i pensieri degli altri e raggiungerli sulla mappa.</li>
       </ul>
       <label for="uIn">Scegli il tuo username</label>
-      <p style="font-size:14px">Firmerà i tuoi pensieri e verrà ricordato ogni volta che torni.</p>
+      <p style="font-size:14px">Firmerà i tuoi pensieri e verrà ricordato ogni volta che torni. Almeno 6 caratteri, con al massimo 2 tra numeri e trattini.</p>
       <input id="uIn" maxlength="20" placeholder="Il tuo username" autocomplete="off">
       <p id="wErr" role="status"></p>
       <button id="ok" type="button">Ho capito</button>
@@ -330,8 +337,9 @@ function isOffensive(name){
 }
 function nameError(n){
   if (!n) return "Scrivi uno username per entrare.";
-  if (n.length < 2 || n.length > 20) return "Lo username deve avere da 2 a 20 caratteri.";
+  if (n.length < 6 || n.length > 20) return "Lo username deve avere da 6 a 20 caratteri.";
   if (!/^[A-Za-z0-9-]+$/.test(n)) return "Usa solo lettere, numeri e trattini.";
+  if ((n.match(/[0-9-]/g) || []).length > 2) return "Puoi usare al massimo 2 tra numeri e trattini.";
   if (isOffensive(n)) return "Questo username non è consentito: scegline un altro.";
   return "";
 }
@@ -486,7 +494,14 @@ grip.addEventListener("pointermove", e => { if (drag) place(drag.top + e.clientY
 ["pointerup", "pointercancel"].forEach(ev => grip.addEventListener(ev, () => drag = null));
 
 // ---- Pensieri
-const icon = c => L.divIcon({className: "", html: '<div class="dot ' + c + '"></div>', iconSize: [18, 18], iconAnchor: [9, 9]});
+// Pallino: iniziale + terzultima lettera dello username (numeri e trattini non contano come lettere)
+function pinText(name){
+  const l = (name || "").replace(/[^A-Za-z]/g, "").toUpperCase();
+  if (!l) return "•";
+  return l.length >= 3 ? l[0] + l[l.length - 3] : l[0] + l[l.length - 1];
+}
+const icon = (name, c) => L.divIcon({className: "", html: '<div class="pin ' + (c || "") + '">' + pinText(name) + '</div>',
+  iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]});
 let picked = null, pickMarker = null, total = 0;
 const markers = new Map();
 const fmt = d => new Date(d).toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit", timeZone: "Europe/Rome"});
@@ -497,9 +512,11 @@ function popupNode(t){
   const s = document.createElement("small"); s.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
   d.append(p, s); return d;
 }
+let lastId = 0;
 function addThought(t, prepend){
+  if (t.id > lastId) lastId = t.id;
   if (markers.has(t.id)) return;
-  const m = L.marker([t.lat, t.lng], {icon: icon("")}).addTo(map).bindPopup(popupNode(t));
+  const m = L.marker([t.lat, t.lng], {icon: icon(t.nickname)}).addTo(map).bindPopup(popupNode(t));
   markers.set(t.id, m); total++;
   const li = document.createElement("li");
   const a = document.createElement("div"); a.className = "t"; a.textContent = t.message;
@@ -527,7 +544,7 @@ map.on("click", e => {
   if (dOpen){ openD(false); return; }
   if (hasPin()){ toast("Hai esaurito i pin per oggi"); return; }
   picked = e.latlng;
-  if (pickMarker) pickMarker.setLatLng(picked); else pickMarker = L.marker(picked, {icon: icon("new")}).addTo(map);
+  if (pickMarker) pickMarker.setLatLng(picked); else pickMarker = L.marker(picked, {icon: icon(getUser(), "new")}).addTo(map);
   msg.textContent = ""; openPanel();
   if (!small) text.focus();
 });
@@ -556,6 +573,19 @@ send.onclick = async () => {
   }
   send.disabled = false;
 };
+
+// Nuovi pallini degli altri: controllo ogni 4 secondi (solo se la pagina è visibile)
+async function poll(){
+  if (document.hidden) return;
+  try{
+    const q = "?select=*&id=gt." + lastId + "&created_at=gte." + encodeURIComponent(today().start.toISOString()) + "&order=id.asc&limit=100";
+    const r = await fetch(API + q, {headers: H});
+    if (!r.ok) return;
+    (await r.json()).forEach(t => addThought(t, true));
+  }catch(e){}
+}
+setInterval(poll, 4000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
 load();
 </script>
 </body>
