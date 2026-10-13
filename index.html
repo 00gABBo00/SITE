@@ -169,10 +169,10 @@ input{margin-bottom:12px}
 .camb{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:#d4c3a1;color:#111;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s,opacity .2s}
 .camb:active{transform:scale(.9)}
 .camb.off{opacity:.45}
-#thumbBox{position:relative;display:flex}
-#thumbBox[hidden],#camHint[hidden]{display:none}
+#thumbBox,#chThumbBox{position:relative;display:flex}
+#thumbBox[hidden],#chThumbBox[hidden],#camHint[hidden]{display:none}
 #thumb{width:44px;height:44px;object-fit:cover;border-radius:12px;border:2px solid var(--fg)}
-#thumbX{position:absolute;top:-7px;right:-7px;width:20px;height:20px;padding:0;border-radius:50%;border:0;background:#E6E1D7;color:#111;font-size:14px;line-height:1;cursor:pointer}
+#thumbX,#chThumbX{position:absolute;top:-7px;right:-7px;width:20px;height:20px;padding:0;border-radius:50%;border:0;background:#E6E1D7;color:#111;font-size:14px;line-height:1;cursor:pointer}
 #camDlg{position:fixed;inset:0;z-index:1900;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:16px;animation:rfade .2s}
 #camDlg[hidden]{display:none}
 #camCard{width:100%;max-width:420px;background:#E6E1D7;color:#111;border-radius:28px;padding:14px;animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
@@ -195,6 +195,42 @@ input{margin-bottom:12px}
 @keyframes glow{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.55),0 6px 18px rgba(255,150,40,.45)}60%{box-shadow:0 0 0 3px rgba(255,255,255,.95),0 6px 28px rgba(255,170,60,.95)}}
 @keyframes sweep{0%,50%{left:-60%}80%,100%{left:130%}}
 @media(prefers-reduced-motion:reduce){.bw .photoBtn,.photoBtn::after,#phImg{animation:none}}
+.bbar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin-bottom:6px}
+.bw .bbar .photoBtn{margin-bottom:0}
+.miniBtn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:8px 14px;background:#E6E1D7;color:#111;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:transform .15s}
+.miniBtn:active{transform:scale(.94)}
+#chatFab{position:fixed;left:12px;bottom:12px;z-index:960;width:54px;height:54px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.4)}
+#chatFab[hidden]{display:none}
+#chatFab.bump{animation:bump .6s}
+@keyframes bump{30%{transform:scale(1.25) rotate(-8deg)}60%{transform:scale(.95) rotate(6deg)}}
+#chatBadge{position:absolute;top:-5px;right:-5px;min-width:22px;height:22px;padding:0 5px;border-radius:11px;background:#d93a3a;color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center}
+#chatBadge.zero{background:rgba(0,0,0,.6)}
+#chatDlg{position:fixed;inset:0;z-index:1840;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center;animation:rfade .2s}
+#chatDlg[hidden]{display:none}
+#chatCard{width:100%;max-width:440px;height:min(78vh,620px);border-radius:28px 28px 0 0;display:flex;flex-direction:column;background:var(--bg);box-shadow:0 -8px 40px rgba(0,0,0,.4);animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
+@media(min-width:761px){#chatDlg{align-items:center}#chatCard{border-radius:28px}}
+.chHead{display:flex;align-items:center;justify-content:space-between;padding:14px 12px 6px}
+.chHead h3{flex:1;text-align:center;font-size:19px}
+.chHead button{width:40px;height:40px;border:0;border-radius:50%;background:transparent;font-size:24px;line-height:1;cursor:pointer}
+.chHead button[hidden]{display:inline-block;visibility:hidden}
+#chList{list-style:none;margin:0;padding:6px 0;overflow:auto;flex:1}
+#chList[hidden],#chConv[hidden]{display:none}
+.chItem{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 14px;margin:0 12px 8px;border-radius:18px;background:rgba(0,0,0,.2);cursor:pointer}
+.chL{min-width:0;display:flex;flex-direction:column}
+.chL b{font-size:16px}
+.chL span{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chU{flex:none;min-width:22px;height:22px;padding:0 6px;border-radius:11px;background:#d93a3a;color:#fff;font-size:12px;font-weight:800;font-style:normal;display:flex;align-items:center;justify-content:center}
+#chConv{display:flex;flex-direction:column;flex:1;min-height:0}
+#chMsgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:8px;padding:10px 14px}
+.cm{max-width:78%;padding:9px 13px;border-radius:18px;font-size:15px;line-height:1.35;overflow-wrap:anywhere;animation:rin .25s}
+.cm.me{align-self:flex-end;background:#E6E1D7;color:#111;border-bottom-right-radius:6px}
+.cm.you{align-self:flex-start;background:rgba(0,0,0,.25);border-bottom-left-radius:6px}
+.cm img{display:block;max-width:100%;max-height:200px;border-radius:12px;margin-bottom:4px;cursor:pointer}
+.cm .t{font-size:10px;opacity:.7;margin-top:3px}
+#chStatus{margin:0;padding:0 16px 4px;font-size:12px;min-height:16px}
+.chComp{display:flex;align-items:center;gap:8px;padding:6px 12px 14px}
+.chComp input{margin:0;flex:1;min-width:0}
+#chThumb{width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid var(--fg)}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -311,6 +347,21 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
   <p id="camErr"></p>
 </div></div>
 <div id="photoDlg" hidden><div id="phCard"><div id="phMsg">Carico la foto...</div><img id="phImg" alt="Foto del pensiero" hidden></div></div>
+<button id="chatFab" class="glass" hidden aria-label="Le tue chat"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12Z"/></svg><span id="chatBadge" class="zero">0</span></button>
+<div id="chatDlg" hidden><div id="chatCard">
+  <div class="chHead"><button id="chBack" aria-label="Indietro" hidden>‹</button><h3 id="chTitle">Le tue chat</h3><button id="chClose" aria-label="Chiudi">×</button></div>
+  <ul id="chList"></ul>
+  <div id="chConv" hidden>
+    <div id="chMsgs"></div>
+    <p id="chStatus" role="status"></p>
+    <div class="chComp">
+      <button id="chCam" type="button" class="camb off" aria-label="Invia una foto"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.6"/></svg></button>
+      <span id="chThumbBox" hidden><img id="chThumb" alt="Foto da inviare"><button id="chThumbX" type="button" aria-label="Rimuovi la foto">×</button></span>
+      <input id="chInput" maxlength="500" placeholder="Scrivi un messaggio" autocomplete="off">
+      <button id="chSend" class="kb" type="button" disabled>Invia</button>
+    </div>
+  </div>
+</div></div>
 <div id="toast" class="glass" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -741,7 +792,7 @@ function pinText(name){
 const icon = (name, c) => L.divIcon({className: "", html: '<div class="pin ' + (c || "") + '">' + pinText(name) + '</div>',
   iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16]});
 let picked = null, pickMarker = null, total = 0;
-const markers = new Map();
+const markers = new Map(), byId = new Map();
 const fmt = d => new Date(d).toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit", timeZone: "Europe/Rome"});
 
 function textLines(msg, w){
@@ -765,10 +816,16 @@ function popupNode(t){
   const more = document.createElement("span"); more.className = "more"; more.textContent = "leggi tutto";
   ft.append(nm, more); d.append(sc, ft);
   const w = document.createElement("div"); w.className = "bw";
-  if (t.has_photo){
-    const pb = document.createElement("button"); pb.type = "button"; pb.className = "photoBtn"; pb.textContent = "Scopri Foto!";
-    pb.onclick = () => openPhoto(t); w.append(pb);
-  }
+  const bar = document.createElement("div"); bar.className = "bbar";
+  const mine = String(t.id) === store.get(MK);
+  const mk = (cls, label, svg, fn) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = cls; b.innerHTML = svg + "<span></span>";
+    b.lastChild.textContent = label; b.onclick = fn; bar.append(b);
+  };
+  if (t.has_photo) mk("photoBtn", "Scopri Foto!", "", () => openPhoto(t));
+  if (mine && !t.has_photo) mk("miniBtn", "Aggiungi foto", ICON_CAM, () => openCam(d2 => addPhotoLater(t, d2)));
+  if (!mine) mk("miniBtn", "Chatta", ICON_CHAT, () => startChat(t));
+  if (bar.children.length) w.append(bar);
   w.append(d); return w;
 }
 let lastId = 0;
@@ -776,7 +833,7 @@ function addThought(t, prepend){
   if (t.id > lastId) lastId = t.id;
   if (markers.has(t.id)) return;
   const m = L.marker([t.lat, t.lng], {icon: icon(t.nickname)}).addTo(map).bindPopup(popupNode(t), POPUP_OPTS);
-  markers.set(t.id, m); total++;
+  markers.set(t.id, m); byId.set(t.id, t); total++;
   m.off("click", m._openPopup);
   m.on("click", () => {           // un tocco apre il messaggio, due tocchi veloci aprono le reazioni
     const now = Date.now();
@@ -842,12 +899,13 @@ async function startCam(){
 }
 $("camBtn").onclick = async () => {
   if (!text.value.trim()){ msg.textContent = "Scrivi prima il messaggio: la foto si può aggiungere solo a un pensiero."; return; }
-  camDlg.hidden = false;
-  if (!(await startCam())){ camDlg.hidden = true; $("camFile").click(); }
+  openCam(d => { photo = d; showPhoto(); });
 };
+let camCb = null;
+async function openCam(cb){ camCb = cb; camDlg.hidden = false; if (!(await startCam())){ camDlg.hidden = true; $("camFile").click(); } }
 $("camShot").onclick = () => {
   if (!camVideo.videoWidth) return;
-  photo = compress(camVideo, camVideo.videoWidth, camVideo.videoHeight); showPhoto(); stopCam(); camDlg.hidden = true;
+  const d = compress(camVideo, camVideo.videoWidth, camVideo.videoHeight); stopCam(); camDlg.hidden = true; if (camCb) camCb(d);
 };
 $("camCancel").onclick = () => { stopCam(); camDlg.hidden = true; };
 $("camFlip").onclick = async () => {
@@ -857,10 +915,139 @@ $("camFlip").onclick = async () => {
 $("camFile").onchange = e => {
   const f = e.target.files[0]; e.target.value = ""; if (!f) return;
   const img = new Image();
-  img.onload = () => { photo = compress(img, img.naturalWidth, img.naturalHeight); showPhoto(); URL.revokeObjectURL(img.src); };
+  img.onload = () => { const d = compress(img, img.naturalWidth, img.naturalHeight); URL.revokeObjectURL(img.src); if (camCb) camCb(d); };
   img.src = URL.createObjectURL(f);
 };
 $("thumbX").onclick = clearPhoto;
+
+// ---- Chat privata con chi ha messo il pallino
+const ICON_CAM = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.6"/></svg>';
+const ICON_CHAT = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1.1-4.6A8 8 0 1 1 21 12Z"/></svg>';
+async function api(fn, args){
+  const r = await fetch(SB_URL + "/rest/v1/rpc/" + fn, {method: "POST", headers: H, body: JSON.stringify(args)});
+  const j = await r.json().catch(() => null);
+  if (!r.ok) throw new Error((j && j.message) || String(r.status));
+  return j;
+}
+function showImg(src){
+  const img = $("phImg"); $("phMsg").hidden = true; img.hidden = true;
+  img.onload = () => { img.hidden = false; }; img.src = src; $("photoDlg").hidden = false;
+}
+async function addPhotoLater(t, d){
+  try{
+    if (!(await api("add_photo", {p_thought: t.id, p_token: voter(), p_data: d}))) throw new Error("no");
+    t.has_photo = true; photoCache.set(t.id, d);
+    const m = markers.get(t.id); m.setPopupContent(popupNode(t)); measure(m.getPopup()); startSpray(m.getPopup(), t.id);
+    toast("Foto aggiunta");
+  }catch(e){ toast("Non sono riuscito ad aggiungere la foto"); }
+}
+const chatDlg = $("chatDlg"), chMsgs = $("chMsgs"), chInput = $("chInput"), chSend = $("chSend"), chStatus = $("chStatus");
+let chats = [], cur = null, chPhoto = null, lastUnread = null, chBusy = false;
+const prevText = c => (c.last_from_me ? "Tu: " : "") + (c.last_has_photo && !c.last_body ? "📷 Foto" : (c.last_body || ""));
+function showView(v){
+  $("chList").hidden = v !== "list"; $("chConv").hidden = v !== "conv"; $("chBack").hidden = v !== "conv";
+  $("chTitle").textContent = v === "conv" && cur ? cur.name : "Le tue chat";
+}
+function drawList(){
+  const ul = $("chList"); ul.innerHTML = "";
+  chats.forEach(c => {
+    const li = document.createElement("li"); li.className = "chItem";
+    const l = document.createElement("div"); l.className = "chL";
+    const n = document.createElement("b"); n.textContent = c.other_name;
+    const p = document.createElement("span"); p.textContent = prevText(c); l.append(n, p); li.append(l);
+    if (Number(c.unread) > 0){ const u = document.createElement("i"); u.className = "chU"; u.textContent = c.unread; li.append(u); }
+    li.onclick = () => openConv({id: c.chat_id, name: c.other_name});
+    ul.append(li);
+  });
+}
+function showThumb(){ $("chThumb").src = chPhoto || ""; $("chThumbBox").hidden = !chPhoto; }
+function addMsg(m){
+  const d = document.createElement("div"); d.className = "cm " + (m.from_me ? "me" : "you");
+  if (m.photo && /^data:image\/jpeg;base64,/.test(m.photo)){
+    const im = document.createElement("img"); im.src = m.photo; im.alt = "Foto"; im.onclick = () => showImg(m.photo); d.append(im);
+  }
+  if (m.body){ const b = document.createElement("div"); b.textContent = m.body; d.append(b); }
+  const t = document.createElement("div"); t.className = "t"; t.textContent = fmt(m.created_at); d.append(t);
+  chMsgs.append(d);
+}
+// Regole: 10 secondi prima di inviare, e dopo un tuo messaggio si aspetta la risposta
+function updateComposer(){
+  if (!cur) return;
+  const last = cur.last; let ok = false, txt = "";
+  if (last && last.from_me) txt = "Aspetta la risposta di " + cur.name + " per scrivere ancora.";
+  else {
+    const ref = last ? Date.parse(last.created_at) : cur.ref;
+    const rem = Math.ceil(10 - ((Date.now() + cur.skew) - ref) / 1000);
+    if (rem > 0) txt = "Potrai inviare tra " + rem + "s"; else ok = true;
+  }
+  cur.ok = ok; chStatus.textContent = txt; chSend.disabled = !ok;
+  chInput.disabled = !!(last && last.from_me); $("chCam").classList.toggle("off", !ok);
+}
+async function pollConv(){
+  if (!cur || chBusy) return;
+  const me = cur; chBusy = true;
+  try{
+    const rows = await api("chat_get", {p_chat: me.id, p_token: voter(), p_after: me.lastId});
+    if (me !== cur) return;
+    let incoming = false;
+    rows.forEach(m => { me.lastId = Math.max(me.lastId, m.id); me.last = m; me.skew = Date.parse(m.srv_now) - Date.now(); if (!m.from_me) incoming = true; addMsg(m); });
+    if (rows.length){
+      chMsgs.scrollTop = chMsgs.scrollHeight;
+      if (incoming) api("chat_read", {p_chat: me.id, p_token: voter()}).then(refreshChats).catch(() => {});
+    }
+    updateComposer();
+  }catch(e){} finally { chBusy = false; }
+}
+async function openConv(c){
+  cur = {id: c.id, name: c.name, lastId: 0, last: null, ok: false, ref: c.created ? Date.parse(c.created) : 0, skew: c.now ? Date.parse(c.now) - Date.now() : 0};
+  chMsgs.innerHTML = ""; chInput.value = ""; chPhoto = null; showThumb();
+  showView("conv"); chatDlg.hidden = false; updateComposer(); await pollConv();
+}
+async function startChat(t){
+  try{
+    const r = await api("chat_open", {p_thought: t.id, p_token: voter(), p_name: getUser() || "Anonimo"});
+    await openConv({id: r.id, name: t.nickname || "Anonimo", created: r.created_at, now: r.now});
+  }catch(e){ toast("Non riesco ad aprire la chat"); }
+}
+chSend.onclick = async () => {
+  if (!cur || !cur.ok) return;
+  const body = chInput.value.trim(), ph = chPhoto;
+  if (!body && !ph) return;
+  chSend.disabled = true;
+  try{
+    await api("chat_send", {p_chat: cur.id, p_token: voter(), p_body: body || null, p_photo: ph || null});
+    chInput.value = ""; chPhoto = null; showThumb(); await pollConv(); refreshChats();
+  }catch(e){
+    const m = String(e.message);
+    toast(/risposta/.test(m) ? "Aspetta la risposta per scrivere ancora" : /secondi/.test(m) ? "Aspetta qualche secondo prima di inviare" : "Messaggio non inviato");
+    await pollConv();
+  }
+  updateComposer();
+};
+chInput.addEventListener("keydown", e => { if (e.key === "Enter") chSend.click(); });
+$("chCam").onclick = () => {
+  if (!cur || !cur.ok){ toast("Potrai scattare quando puoi inviare"); return; }
+  openCam(d => { chPhoto = d; showThumb(); });
+};
+$("chThumbX").onclick = () => { chPhoto = null; showThumb(); };
+$("chBack").onclick = () => { cur = null; showView("list"); drawList(); refreshChats(); };
+$("chClose").onclick = () => { chatDlg.hidden = true; cur = null; };
+chatDlg.addEventListener("pointerdown", e => { if (e.target === chatDlg){ chatDlg.hidden = true; cur = null; } });
+$("chatFab").onclick = () => { cur = null; showView("list"); drawList(); chatDlg.hidden = false; refreshChats(); };
+async function refreshChats(){
+  if (document.hidden) return;
+  try{
+    const rows = await api("chat_list", {p_token: voter()});
+    chats = rows; const unread = rows.reduce((a, c) => a + Number(c.unread), 0), fab = $("chatFab");
+    fab.hidden = !rows.length; $("chatBadge").textContent = unread; $("chatBadge").classList.toggle("zero", unread === 0);
+    if (lastUnread !== null && unread > lastUnread){ toast("Nuovo messaggio"); fab.classList.remove("bump"); void fab.offsetWidth; fab.classList.add("bump"); }
+    lastUnread = unread;
+    if (!chatDlg.hidden && !$("chList").hidden) drawList();
+  }catch(e){}
+}
+setInterval(refreshChats, 5000); setInterval(pollConv, 3000); setInterval(updateComposer, 1000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) refreshChats(); });
+refreshChats();
 
 // Chi legge: "Scopri Foto!" mostra la foto con una piccola animazione
 async function openPhoto(t){
@@ -902,20 +1089,13 @@ send.onclick = async () => {
   if (tooClose(picked)){ msg.textContent = CLOSE_MSG; return; }
   send.disabled = true; msg.textContent = "Pubblico...";
   try{
-    const r = await fetch(API, {method: "POST", headers: {...H, Prefer: "return=representation"},
-      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: getUser() || null, color: pick.color, shape: pick.shape, has_photo: !!photo})});
-    if (!r.ok) throw new Error(r.status);
-    const [t] = await r.json();
-    store.set(PK, today().key); store.set(MK, String(t.id));
     const ph = photo;
+    const j = await api("post_thought", {p_lat: picked.lat, p_lng: picked.lng, p_message: message, p_nickname: getUser() || null,
+      p_color: pick.color, p_shape: pick.shape, p_token: voter(), p_photo: ph || null});
+    const t = Array.isArray(j) ? j[0] : j;
+    store.set(PK, today().key); store.set(MK, String(t.id));
+    if (ph) photoCache.set(t.id, ph);
     closeForm(); addThought(t, true); markers.get(t.id).openPopup(); toast("Pensiero pubblicato");
-    if (ph){
-      try{
-        const pr = await fetch(SB_URL + "/rest/v1/photos", {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({thought_id: t.id, data: ph})});
-        if (!pr.ok) throw new Error(pr.status);
-        photoCache.set(t.id, ph);
-      }catch(e){ toast("Il pensiero è online, ma la foto non è stata salvata"); }
-    }
   }catch(e){
     msg.textContent = "Non è stato possibile pubblicare. Riprova.";
   }
@@ -930,8 +1110,16 @@ async function poll(){
     const r = await fetch(API + q, {headers: H});
     if (!r.ok) return;
     (await r.json()).forEach(t => addThought(t, true));
+    if (++pollN % 3 === 0){
+      const r2 = await fetch(API + "?select=id&has_photo=eq.true&created_at=gte." + encodeURIComponent(today().start.toISOString()), {headers: H});
+      if (r2.ok) (await r2.json()).forEach(x => {
+        const t = byId.get(x.id);
+        if (t && !t.has_photo){ t.has_photo = true; markers.get(t.id).setPopupContent(popupNode(t)); }
+      });
+    }
   }catch(e){}
 }
+let pollN = 0;
 setInterval(poll, 4000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) poll(); });
 load();
