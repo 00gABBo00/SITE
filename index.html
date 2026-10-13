@@ -119,7 +119,7 @@ input{margin-bottom:12px}
 #tv{font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.15}
 #tResize{position:absolute;top:7px;right:7px;width:22px;height:22px;padding:0;border-radius:8px;border:1px solid var(--line);background:rgba(0,0,0,.2);display:none;align-items:center;justify-content:center;cursor:nesw-resize;touch-action:none}
 @media (hover:hover) and (pointer:fine){#tResize{display:flex}}
-.pin{width:36px;height:36px;border-radius:50%;background:#E6E1D7;border:2.5px solid #111;color:#111;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;letter-spacing:-.02em;box-shadow:0 2px 6px rgba(0,0,0,.45);animation:pinIn .45s cubic-bezier(.2,1.4,.4,1)}
+.pin{width:28px;height:28px;border-radius:50%;background:#E6E1D7;border:2px solid #111;color:#111;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;letter-spacing:-.02em;box-shadow:0 2px 6px rgba(0,0,0,.45);animation:pinIn .45s cubic-bezier(.2,1.4,.4,1)}
 @keyframes pinIn{from{transform:scale(0) translateY(-12px);opacity:0}to{transform:none;opacity:1}}
 @keyframes bubble{0%{opacity:0;transform:translateY(14px) scale(.35)}60%{opacity:1;transform:translateY(-3px) scale(1.06)}100%{opacity:1;transform:none}}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
@@ -130,7 +130,42 @@ input{margin-bottom:12px}
 .leaflet-popup-content{font-family:inherit;font-size:15px;line-height:1.4;overflow-wrap:anywhere}
 .leaflet-popup-content>div>*{animation:fadeUp .4s .18s backwards}
 .leaflet-popup-content small{display:block;margin-top:6px;font-weight:600}
-@media(prefers-reduced-motion:reduce){.pin,.leaflet-popup-content-wrapper,.leaflet-popup-tip-container,.leaflet-popup-content>div>*{animation:none}}
+/* Nuvoletta del messaggio: SEMPRE della stessa grandezza (220x132), il testo lungo scorre dentro */
+.bubwrap.leaflet-popup{margin-bottom:0}
+.bubwrap .leaflet-popup-content-wrapper{background:transparent;box-shadow:none;border-radius:0;padding:0;transform-origin:50% 100%;filter:drop-shadow(0 6px 10px rgba(0,0,0,.35))}
+.bubwrap .leaflet-popup-content{margin:0;width:220px!important}
+.bubwrap .leaflet-popup-tip-container{display:none}
+.bub{position:relative;width:220px;height:132px;padding:22px var(--pr,34px) 0 var(--pl,34px);background:var(--shape) center/100% 100% no-repeat;color:var(--tc);display:flex;flex-direction:column}
+.bsc{height:56px;overflow:hidden;display:flex;flex-direction:column}
+.bsc[data-over]{cursor:pointer}
+.btx{flex:none;margin:auto 0;font-size:14px;line-height:1.35;font-weight:600;overflow-wrap:anywhere}
+.btx.run{margin:0;animation:scrollTxt var(--dur,6s) ease-in-out infinite alternate}
+@keyframes scrollTxt{0%,14%{transform:translateY(0)}86%,100%{transform:translateY(calc(var(--dist) * -1))}}
+.bft{display:flex;justify-content:space-between;gap:8px;margin-top:4px;font-size:11px;font-weight:700;white-space:nowrap;opacity:.85}
+.bft .nm{overflow:hidden;text-overflow:ellipsis}
+.bft .more{display:none;flex:none;text-decoration:underline}
+.bsc[data-over]+.bft .more{display:inline}
+#readDlg{position:fixed;inset:0;z-index:1850;background:rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:20px;animation:rfade .2s}
+#readDlg[hidden]{display:none}
+#rCard{width:100%;max-width:340px;max-height:65vh;display:flex;flex-direction:column;background:#d4c3a1;color:var(--tc);border-radius:26px;padding:20px 22px;box-shadow:0 10px 40px rgba(0,0,0,.45);animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
+#rTx{overflow:auto;font-size:16px;line-height:1.45;font-weight:500;overflow-wrap:anywhere;white-space:pre-wrap}
+#rFt{margin-top:12px;font-size:12px;font-weight:700}
+@keyframes rfade{from{opacity:0}to{opacity:1}}
+@keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
+/* Scelte prima di scrivere */
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.sw{width:32px;height:32px;border-radius:50%;border:0;background:#d4c3a1;color:var(--c);font-weight:800;font-size:15px;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.sw:active{transform:scale(.9)}
+.sw[aria-checked=true]{box-shadow:0 0 0 2px var(--bg),0 0 0 4px var(--fg)}
+.shapes{display:flex;gap:6px;overflow-x:auto;margin:0 -4px 12px;padding:2px 4px 4px;scroll-snap-type:x proximity}
+.shp{flex:none;scroll-snap-align:start;background:transparent;border:2px solid transparent;border-radius:14px;padding:5px 4px 3px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;transition:border-color .15s,transform .15s}
+.shp:active{transform:scale(.95)}
+.shp[aria-checked=true]{border-color:var(--fg)}
+.th{display:flex;align-items:center;justify-content:center;width:74px;height:44px;background:var(--shape) center/100% 100% no-repeat;color:var(--tc);font-weight:800;font-size:15px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.sn{font-size:11px}
+#text{background:#d4c3a1;color:var(--tc);border-color:transparent;font-weight:500}
+#text::placeholder{color:var(--tc);opacity:.55}
+@media(prefers-reduced-motion:reduce){.pin,.leaflet-popup-content-wrapper,.leaflet-popup-tip-container,.leaflet-popup-content>div>*,.btx.run,#rCard,#readDlg{animation:none}}
 .leaflet-container a.leaflet-popup-close-button{color:var(--fg)}
 button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
 @media(max-width:760px){#panel{left:10px;right:10px;width:auto}#welcome h1{font-size:38px}}
@@ -197,6 +232,10 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
   </div>
   <div id="body">
     <p id="as">Pubblichi come <b id="asName"></b></p>
+    <label>Colore del testo</label>
+    <div id="swatches" class="swatches" role="radiogroup"></div>
+    <label>Forma del messaggio</label>
+    <div id="shapes" class="shapes" role="radiogroup"></div>
     <label for="text">Cosa vuoi dire di questo posto?</label>
     <textarea id="text" maxlength="280"></textarea>
     <div class="row">
@@ -211,6 +250,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
   <div class="tl">I pensieri spariscono tra</div>
   <div id="tv">--:--:--</div>
 </div>
+<div id="readDlg" hidden><div id="rCard"><div id="rTx"></div><div id="rFt"></div></div></div>
 <div id="toast" class="glass" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -480,7 +520,7 @@ function place(top){
 addEventListener("resize", () => { if (!panel.hidden) place(panel.offsetTop); });
 function openPanel(){
   panel.hidden = false; panel.classList.remove("tucked"); tab.hidden = true;
-  if (!placed){ place(small ? Math.round(innerHeight * 0.5) : 90); placed = true; }
+  if (!placed){ place(small ? Math.round(innerHeight * 0.42) : 90); placed = true; }
 }
 function closePanel(){ panel.hidden = true; tab.hidden = true; }
 $("hide").onclick = () => { panel.classList.add("tucked"); tab.hidden = false; };
@@ -494,6 +534,68 @@ grip.addEventListener("pointermove", e => { if (drag) place(drag.top + e.clientY
 ["pointerup", "pointercancel"].forEach(ev => grip.addEventListener(ev, () => drag = null));
 
 // ---- Pensieri
+const SAND = "#d4c3a1";
+// Colori del testo, complementari alla casella color sabbia (blu e toni profondi)
+const COLORS = [{v:"#1f2d5a",n:"Blu notte"},{v:"#2748b0",n:"Cobalto"},{v:"#17181c",n:"Inchiostro"},{v:"#14606b",n:"Petrolio"},{v:"#7a2638",n:"Bordeaux"},{v:"#2f5b3a",n:"Foresta"}];
+// Forme (tutte 220x132, stessa grandezza); pl/pr = margini del testo
+const SHAPES = [
+  {id:"smussato", n:"Smussato", pl:30, pr:30, svg:'<rect x="1" y="1" width="218" height="110" rx="32"/>'},
+  {id:"nuvoletta", n:"Nuvoletta", pl:30, pr:30, svg:'<rect x="1" y="1" width="218" height="110" rx="26"/><path d="M90 108C100 116 106 124 110 131C114 124 120 116 130 108Z"/>'},
+  {id:"pensiero", n:"Pensiero", pl:38, pr:38, svg:'<ellipse cx="110" cy="54" rx="84" ry="40"/><circle cx="36" cy="56" r="24"/><circle cx="72" cy="30" r="26"/><circle cx="116" cy="28" r="26"/><circle cx="156" cy="34" r="24"/><circle cx="186" cy="56" r="24"/><circle cx="156" cy="80" r="24"/><circle cx="112" cy="82" r="24"/><circle cx="68" cy="80" r="24"/><circle cx="102" cy="116" r="8"/><circle cx="110" cy="128" r="3.5"/>'},
+  {id:"pillola", n:"Pillola", pl:44, pr:44, svg:'<rect x="1" y="6" width="218" height="100" rx="50"/>'},
+  {id:"biglietto", n:"Biglietto", pl:28, pr:46, svg:'<path d="M6 6H214V43A13 13 0 0 0 214 69V106H6V69A13 13 0 0 0 6 43Z" stroke="#d4c3a1" stroke-width="10" stroke-linejoin="round"/><line x1="184" y1="16" x2="184" y2="96" stroke="#b39d6e" stroke-width="2" stroke-dasharray="4 5"/>'},
+  {id:"organica", n:"Organica", pl:38, pr:38, svg:'<path d="M44 14C86 0 148 4 186 20C218 34 218 80 192 98C158 114 84 114 44 100C8 84 8 32 44 14Z"/><path d="M110 131C101 123 101 113 110 110C119 113 119 123 110 131Z"/>'}
+];
+const svgUrl = sh => 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 132" fill="' + SAND + '">' + sh.svg + '</svg>') + '")';
+let pick = {color: COLORS[0].v, shape: SHAPES[0].id};
+function refreshPick(){
+  COLORS.forEach(c => c.el.setAttribute("aria-checked", c.v === pick.color));
+  SHAPES.forEach(sh => sh.el.setAttribute("aria-checked", sh.id === pick.shape));
+  $("panel").style.setProperty("--tc", pick.color);
+}
+COLORS.forEach(c => {
+  const b = document.createElement("button"); b.type = "button"; b.className = "sw"; b.textContent = "A"; b.title = c.n;
+  b.setAttribute("role", "radio"); b.setAttribute("aria-label", c.n); b.style.setProperty("--c", c.v);
+  b.onclick = () => { pick.color = c.v; refreshPick(); }; $("swatches").append(b); c.el = b;
+});
+SHAPES.forEach(sh => {
+  const b = document.createElement("button"); b.type = "button"; b.className = "shp"; b.setAttribute("role", "radio");
+  b.innerHTML = '<span class="th">Aa</span><span class="sn"></span>';
+  b.querySelector(".th").style.setProperty("--shape", svgUrl(sh)); b.querySelector(".sn").textContent = sh.n;
+  b.onclick = () => { pick.shape = sh.id; refreshPick(); }; $("shapes").append(b); sh.el = b;
+});
+refreshPick();
+
+// Nessun pin sopra o vicino a un altro (raggio piccolo: 25 m, e mai sovrapposti sullo schermo)
+const RADIUS_M = 25, MIN_PX = 30;
+function tooClose(ll){
+  const pt = map.latLngToContainerPoint(ll);
+  for (const m of markers.values()){
+    const q = m.getLatLng();
+    if (map.distance(ll, q) < RADIUS_M || pt.distanceTo(map.latLngToContainerPoint(q)) < MIN_PX) return true;
+  }
+  return false;
+}
+const CLOSE_MSG = "Troppo vicino a un altro pin: scegli un punto più in là o avvicina la mappa.";
+
+// Nuvoletta: testo lungo che scorre; un tocco apre il messaggio intero
+const POPUP_OPTS = {className: "bubwrap", minWidth: 220, maxWidth: 220, closeButton: false, autoPanPaddingTopLeft: [16, 60], autoPanPaddingBottomRight: [16, 16]};
+function measure(pop){
+  const el = pop.getElement(); if (!el) return;
+  const sc = el.querySelector(".bsc"), tx = el.querySelector(".btx");
+  tx.classList.remove("run"); delete sc.dataset.over;
+  const over = tx.offsetHeight - sc.clientHeight;
+  if (over > 2){
+    sc.dataset.over = "1"; tx.style.setProperty("--dist", over + "px");
+    tx.style.setProperty("--dur", (over / 16 + 3).toFixed(1) + "s"); tx.classList.add("run");
+  }
+}
+function openRead(t, col){
+  $("rCard").style.setProperty("--tc", col); $("rTx").textContent = t.message;
+  $("rFt").textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at); $("readDlg").hidden = false;
+}
+$("readDlg").addEventListener("pointerdown", e => { if (e.target.id === "readDlg") $("readDlg").hidden = true; });
+
 // Pallino: iniziale + terzultima lettera dello username (numeri e trattini non contano come lettere)
 function pinText(name){
   const l = (name || "").replace(/[^A-Za-z]/g, "").toUpperCase();
@@ -501,23 +603,31 @@ function pinText(name){
   return l.length >= 3 ? l[0] + l[l.length - 3] : l[0] + l[l.length - 1];
 }
 const icon = (name, c) => L.divIcon({className: "", html: '<div class="pin ' + (c || "") + '">' + pinText(name) + '</div>',
-  iconSize: [36, 36], iconAnchor: [18, 18], popupAnchor: [0, -20]});
+  iconSize: [28, 28], iconAnchor: [14, 14], popupAnchor: [0, -16]});
 let picked = null, pickMarker = null, total = 0;
 const markers = new Map();
 const fmt = d => new Date(d).toLocaleTimeString("it-IT", {hour: "2-digit", minute: "2-digit", timeZone: "Europe/Rome"});
 
 function popupNode(t){
-  const d = document.createElement("div");
-  const p = document.createElement("div"); p.textContent = t.message;
-  const s = document.createElement("small"); s.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
-  d.append(p, s); return d;
+  const sh = SHAPES.find(x => x.id === t.shape) || SHAPES[0], col = COLORS.some(c => c.v === t.color) ? t.color : COLORS[0].v;
+  const d = document.createElement("div"); d.className = "bub";
+  d.style.setProperty("--shape", svgUrl(sh)); d.style.setProperty("--tc", col);
+  d.style.setProperty("--pl", sh.pl + "px"); d.style.setProperty("--pr", sh.pr + "px");
+  const sc = document.createElement("div"); sc.className = "bsc";
+  const tx = document.createElement("div"); tx.className = "btx"; tx.textContent = t.message; sc.append(tx);
+  sc.onclick = () => { if (sc.dataset.over) openRead(t, col); };
+  const ft = document.createElement("div"); ft.className = "bft";
+  const nm = document.createElement("span"); nm.className = "nm"; nm.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
+  const more = document.createElement("span"); more.className = "more"; more.textContent = "leggi tutto";
+  ft.append(nm, more); d.append(sc, ft); return d;
 }
 let lastId = 0;
 function addThought(t, prepend){
   if (t.id > lastId) lastId = t.id;
   if (markers.has(t.id)) return;
-  const m = L.marker([t.lat, t.lng], {icon: icon(t.nickname)}).addTo(map).bindPopup(popupNode(t));
+  const m = L.marker([t.lat, t.lng], {icon: icon(t.nickname)}).addTo(map).bindPopup(popupNode(t), POPUP_OPTS);
   markers.set(t.id, m); total++;
+  m.on("popupopen", ev => measure(ev.popup));
   const li = document.createElement("li");
   const a = document.createElement("div"); a.className = "t"; a.textContent = t.message;
   const b = document.createElement("div"); b.className = "m"; b.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
@@ -539,10 +649,14 @@ async function load(){
   }
 }
 
+let justClosed = 0;
+map.on("popupclose", () => { justClosed = Date.now(); });
 map.on("click", e => {
+  if (Date.now() - justClosed < 300) return;
   layMenu.hidden = true;
   if (dOpen){ openD(false); return; }
   if (hasPin()){ toast("Hai esaurito i pin per oggi"); return; }
+  if (tooClose(e.latlng)){ toast(CLOSE_MSG); return; }
   picked = e.latlng;
   if (pickMarker) pickMarker.setLatLng(picked); else pickMarker = L.marker(picked, {icon: icon(getUser(), "new")}).addTo(map);
   msg.textContent = ""; openPanel();
@@ -560,10 +674,11 @@ send.onclick = async () => {
   if (!picked) return;
   if (hasPin()){ closeForm(); toast("Hai esaurito i pin per oggi"); return; }
   if (!message){ msg.textContent = "Scrivi qualcosa prima di pubblicare."; return; }
+  if (tooClose(picked)){ msg.textContent = CLOSE_MSG; return; }
   send.disabled = true; msg.textContent = "Pubblico...";
   try{
     const r = await fetch(API, {method: "POST", headers: {...H, Prefer: "return=representation"},
-      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: getUser() || null})});
+      body: JSON.stringify({lat: picked.lat, lng: picked.lng, message, nickname: getUser() || null, color: pick.color, shape: pick.shape})});
     if (!r.ok) throw new Error(r.status);
     const [t] = await r.json();
     store.set(PK, today().key);
