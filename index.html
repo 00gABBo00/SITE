@@ -176,7 +176,14 @@ input{margin-bottom:12px}
 #camDlg{position:fixed;inset:0;z-index:1900;background:rgba(0,0,0,.75);display:flex;align-items:center;justify-content:center;padding:16px;animation:rfade .2s}
 #camDlg[hidden]{display:none}
 #camCard{width:100%;max-width:420px;background:#E6E1D7;color:#111;border-radius:28px;padding:14px;animation:rin .3s cubic-bezier(.2,.9,.3,1.15)}
-#camVideo{display:block;width:100%;max-height:60vh;border-radius:18px;background:#000;object-fit:cover}
+.camView{position:relative;width:min(100%,calc(58vh * .75));aspect-ratio:3/4;margin:0 auto;border-radius:18px;overflow:hidden;background:#000}
+@media(min-width:761px){.camView{width:min(100%,calc(58vh * 1.333));aspect-ratio:4/3}}
+#camVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+#camVideo.mirror{transform:scaleX(-1)}
+.kb{border:0;background:#111;color:#fff;border-radius:14px;padding:12px 22px;font-weight:600;font-size:16px;cursor:pointer;transition:transform .12s}
+.kb:active{transform:scale(.95)}
+.kb:disabled{opacity:.45}
+#camFlip{font-size:20px;line-height:1;padding:10px 16px}
 .camBar{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
 #camShot{width:64px;height:64px;border-radius:50%;border:4px solid #111;background:#fff;box-shadow:inset 0 0 0 4px #E6E1D7;cursor:pointer;transition:transform .12s}
 #camShot:active{transform:scale(.9)}
@@ -231,6 +238,20 @@ input{margin-bottom:12px}
 .chComp{display:flex;align-items:center;gap:8px;padding:6px 12px 14px}
 .chComp input{margin:0;flex:1;min-width:0}
 #chThumb{width:40px;height:40px;object-fit:cover;border-radius:10px;border:2px solid var(--fg)}
+#chatCard{background:#d4c3a1;color:#2b2416;box-shadow:0 -8px 40px rgba(0,0,0,.35)}
+.chHead h3,.chHead button{color:#2b2416}
+.chItem{background:#E6E1D7;color:#2b2416}
+.chL span{color:#5b4f38}
+#chStatus{color:#5b4f38;font-weight:600}
+.cm.me{background:#1f2d5a;color:#E6E1D7}
+.cm.you{background:#E6E1D7;color:#2b2416}
+.chComp input{background:#E6E1D7;color:#2b2416;border:1px solid rgba(43,36,22,.25)}
+.chComp input::placeholder{color:#7a6c4f;opacity:1}
+#chCam{background:#1f2d5a;color:#E6E1D7}
+#chSend{background:#1f2d5a;color:#fff}
+#chThumb{border-color:#1f2d5a}
+#chThumbX{background:#1f2d5a;color:#fff}
+#chatFab{background:#d4c3a1;color:#1f2d5a}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -342,7 +363,7 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
 <div id="reactDlg" hidden><div id="rxCard"><div id="rxTitle">Reagisci al pensiero di <b id="rxName"></b></div><div class="rxRow" id="rxRow"></div></div></div>
 <input type="file" id="camFile" accept="image/*" capture="environment" hidden>
 <div id="camDlg" hidden><div id="camCard">
-  <video id="camVideo" playsinline autoplay muted></video>
+  <div class="camView" id="camView"><video id="camVideo" playsinline autoplay muted></video></div>
   <div class="camBar"><button class="kb" id="camCancel" type="button">Annulla</button><button id="camShot" type="button" aria-label="Scatta"></button><button class="kb" id="camFlip" type="button" aria-label="Cambia fotocamera">↺</button></div>
   <p id="camErr"></p>
 </div></div>
@@ -877,14 +898,18 @@ map.on("click", e => {
   if (!small) text.focus();
 });
 // ---- Foto: facoltativa, una sola, solo se c'è un messaggio
-let photo = null, camStream = null, camFacing = "environment";
+let photo = null, camStream = null, camFacing = "environment", camMirror = false;
 const camDlg = $("camDlg"), camVideo = $("camVideo"), photoCache = new Map();
 function stopCam(){ if (camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; } camVideo.srcObject = null; }
 function showPhoto(){ $("thumb").src = photo || ""; $("thumbBox").hidden = !photo; $("camHint").hidden = !!photo; }
 function clearPhoto(){ photo = null; showPhoto(); $("camBtn").classList.toggle("off", !text.value.trim()); }
-function compress(src, w, h){
-  const k = Math.min(1, 900 / Math.max(w, h)), c = document.createElement("canvas");
-  c.width = Math.round(w * k); c.height = Math.round(h * k); c.getContext("2d").drawImage(src, 0, 0, c.width, c.height);
+function compress(src, w, h, mirror, ar){
+  let sx = 0, sy = 0, sw = w, sh = h;
+  if (ar){ if (w / h > ar){ sw = h * ar; sx = (w - sw) / 2; } else { sh = w / ar; sy = (h - sh) / 2; } }
+  const k = Math.min(1, 900 / Math.max(sw, sh)), c = document.createElement("canvas");
+  c.width = Math.round(sw * k); c.height = Math.round(sh * k);
+  const x = c.getContext("2d"); if (mirror){ x.translate(c.width, 0); x.scale(-1, 1); }
+  x.drawImage(src, sx, sy, sw, sh, 0, 0, c.width, c.height);
   let q = .72, d = c.toDataURL("image/jpeg", q);
   while (d.length > 380000 && q > .35){ q -= .1; d = c.toDataURL("image/jpeg", q); }
   return d;
@@ -894,6 +919,8 @@ async function startCam(){
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return false;
   try{
     camStream = await navigator.mediaDevices.getUserMedia({video: {facingMode: camFacing, width: {ideal: 1280}}, audio: false});
+    const fm = camStream.getVideoTracks()[0].getSettings().facingMode;
+    camMirror = fm !== "environment"; camVideo.classList.toggle("mirror", camMirror);
     camVideo.srcObject = camStream; await camVideo.play().catch(() => {}); return true;
   }catch(e){ return false; }
 }
@@ -905,7 +932,7 @@ let camCb = null;
 async function openCam(cb){ camCb = cb; camDlg.hidden = false; if (!(await startCam())){ camDlg.hidden = true; $("camFile").click(); } }
 $("camShot").onclick = () => {
   if (!camVideo.videoWidth) return;
-  const d = compress(camVideo, camVideo.videoWidth, camVideo.videoHeight); stopCam(); camDlg.hidden = true; if (camCb) camCb(d);
+  const v = $("camView"), d = compress(camVideo, camVideo.videoWidth, camVideo.videoHeight, camMirror, v.clientWidth / v.clientHeight); stopCam(); camDlg.hidden = true; if (camCb) camCb(d);
 };
 $("camCancel").onclick = () => { stopCam(); camDlg.hidden = true; };
 $("camFlip").onclick = async () => {
@@ -975,11 +1002,7 @@ function updateComposer(){
   if (!cur) return;
   const last = cur.last; let ok = false, txt = "";
   if (last && last.from_me) txt = "Aspetta la risposta di " + cur.name + " per scrivere ancora.";
-  else {
-    const ref = last ? Date.parse(last.created_at) : cur.ref;
-    const rem = Math.ceil(10 - ((Date.now() + cur.skew) - ref) / 1000);
-    if (rem > 0) txt = "Potrai inviare tra " + rem + "s"; else ok = true;
-  }
+  else ok = true;
   cur.ok = ok; chStatus.textContent = txt; chSend.disabled = !ok;
   chInput.disabled = !!(last && last.from_me); $("chCam").classList.toggle("off", !ok);
 }
