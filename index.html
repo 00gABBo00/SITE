@@ -301,6 +301,36 @@ input{margin-bottom:12px}
 .nfChat{display:block;margin-top:8px;border:0;border-radius:999px;padding:6px 14px;background:#1f2d5a;color:#E6E1D7;font-weight:700;font-size:13px;cursor:pointer;transition:transform .15s}
 .nfChat:active{transform:scale(.94)}
 @media(prefers-reduced-motion:reduce){#drawer.buzz,#menuBtn.buzz,.dBtn.buzz .di{animation:none}}
+.aud{display:flex;align-items:center;gap:10px;width:100%;height:34px;border:0;background:transparent;color:inherit;cursor:pointer;padding:0;font-weight:700}
+.aud .ap{flex:none;width:34px;height:34px;border-radius:50%;background:var(--tc);color:#d4c3a1;display:flex;align-items:center;justify-content:center}
+.aud.load .ap{opacity:.55}
+.aud .ab{flex:1;display:flex;align-items:center;gap:3px;height:30px}
+.aud .ab i{flex:1;max-width:5px;height:45%;border-radius:3px;background:currentColor;opacity:.5}
+.aud .ab i:nth-child(3n){height:75%}
+.aud .ab i:nth-child(4n+1){height:30%}
+.aud.on .ab i{opacity:1;animation:abar .7s ease-in-out infinite alternate}
+.aud.on .ab i:nth-child(2n){animation-delay:.18s}
+.aud.on .ab i:nth-child(3n){animation-delay:.34s}
+@keyframes abar{from{transform:scaleY(.4)}to{transform:scaleY(1.3)}}
+.camb.rec{background:#d93a3a;color:#fff;animation:recp 1.1s ease-in-out infinite}
+@keyframes recp{50%{box-shadow:0 0 0 7px rgba(217,58,58,.28)}}
+#micLive,#micBox{display:flex;align-items:center;gap:8px;font-size:13px}
+#micLive[hidden],#micBox[hidden],#micBtn[hidden]{display:none}
+#micTime,#micDur{font-variant-numeric:tabular-nums;font-weight:700}
+#micX{width:20px;height:20px;padding:0;border-radius:50%;border:0;background:#E6E1D7;color:#111;font-size:14px;line-height:1;cursor:pointer}
+.cfCard{padding:24px 22px 20px;text-align:center}
+.cfCard h3{margin:0 0 8px;color:#2b2416;font-size:19px}
+.cfCard p{margin:0 0 16px;font-size:14px;line-height:1.4;color:#5b4f38}
+.kRow2{display:flex;gap:10px;justify-content:center}
+#cfYes{background:#7a2638}
+#rxCard{position:relative;overflow:hidden}
+.rxb.sel{background:rgba(31,45,90,.16);box-shadow:inset 0 0 0 2px #1f2d5a}
+#rxDel{display:block;margin:6px auto 0;border:0;background:transparent;color:#7a2638;font-weight:700;font-size:12px;text-decoration:underline;cursor:pointer}
+#rxDel[hidden],#rxLock[hidden]{display:none}
+#rxLock{position:absolute;inset:0;background:rgba(0,0,0,.68);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-weight:700;animation:rfade .25s}
+#rxLock .tm{font-size:24px;font-variant-numeric:tabular-nums}
+#rxLock small{font-size:11px;font-weight:600;opacity:.85}
+@media(prefers-reduced-motion:reduce){.camb.rec,.aud.on .ab i{animation:none}}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -398,7 +428,10 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <textarea id="text" maxlength="280"></textarea>
     <div class="camRow">
       <button id="camBtn" type="button" class="camb off" aria-label="Aggiungi una foto"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l1.6-2.5h6.8L17 8h3a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1Z"/><circle cx="12" cy="13" r="3.6"/></svg></button>
-      <span id="camHint">Aggiungi una foto (facoltativo)</span>
+      <button id="micBtn" type="button" class="camb off" aria-label="Registra un audio"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+      <span id="camHint">Foto (facoltativa), oppure un audio al posto del testo</span>
+      <span id="micLive" hidden><b id="micTime">0:00</b> / 0:30 · tocca per fermare</span>
+      <span id="micBox" hidden><button id="micPlay" type="button" class="camb" aria-label="Riascolta"></button><b id="micDur"></b><button id="micX" type="button" aria-label="Elimina l'audio">×</button></span>
       <span id="thumbBox" hidden><img id="thumb" alt="Anteprima della foto"><button id="thumbX" type="button" aria-label="Rimuovi la foto">×</button></span>
     </div>
     <div class="row">
@@ -414,7 +447,9 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
   <div id="tv">--:--:--</div>
 </div>
 <div id="readDlg" hidden><div id="rCard"><div id="rTx"></div><div id="rFt"></div></div></div>
-<div id="reactDlg" hidden><div id="rxCard"><div id="rxTitle">Reagisci al pensiero di <b id="rxName"></b></div><div class="rxRow" id="rxRow"></div></div></div>
+<div id="reactDlg" hidden><div id="rxCard"><div id="rxTitle"><span id="rxTxt">Reagisci al pensiero di</span> <b id="rxName"></b></div><div class="rxRow" id="rxRow"></div><button id="rxDel" type="button" hidden>Rimuovi la mia reazione</button>
+  <div id="rxLock" hidden><svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><div class="tm" id="rxTimer">30:00</div><small>Potrai reagire di nuovo tra poco</small></div></div></div>
+<div id="cfDlg" class="sandDlg" hidden><div class="sandCard cfCard"><h3>Eliminare il pensiero?</h3><p id="cfP"></p><div class="kRow2"><button class="kb" id="cfNo" type="button">Annulla</button><button class="kb" id="cfYes" type="button">Elimina</button></div></div></div>
 <input type="file" id="camFile" accept="image/*" capture="environment" hidden>
 <div id="camDlg" hidden><div id="camCard">
   <div class="camView" id="camView"><video id="camVideo" playsinline autoplay muted></video></div>
@@ -459,7 +494,7 @@ const SB_KEY = "sb_publishable_IbnSX5yMcc6KckO9nxJ9Yg_HBDbon4G";
 const API = SB_URL + "/rest/v1/thoughts";
 const H = {apikey: SB_KEY, "Content-Type": "application/json"};
 const $ = id => document.getElementById(id);
-const VK = "dreamapSeen2", PK = "dreamapPin2", UK = "dreamapUser3", UCK = "dreamapUserChanged3", MK = "dreamapMine3", RK = "dreamapReacted3", VRK = "dreamapVoter3";
+const VK = "dreamapSeen2", PK = "dreamapPin2", UK = "dreamapUser3", UCK = "dreamapUserChanged3", MK = "dreamapMine3", RK = "dreamapReacted3", VRK = "dreamapVoter3", PNK = "dreamapPins3";
 const store = {
   get: k => { try { return localStorage.getItem(k); } catch(e) { return null; } },
   set: (k, v) => { try { localStorage.setItem(k, v); } catch(e) {} },
@@ -467,7 +502,7 @@ const store = {
 };
 if (location.search.includes("reset")){
   const _u = store.get(UK), _t = store.get(VRK);
-  if (_u && _t) fetch(SB_URL + "/rest/v1/rpc/release_username", {method: "POST", headers: H, body: JSON.stringify({p_name: _u, p_token: _t})}).catch(() => {}); store.del(VK); store.del(PK); store.del(UK); store.del(UCK); store.del(MK); store.del(RK); store.del(VRK); history.replaceState(null, "", location.pathname); }
+  if (_u && _t) fetch(SB_URL + "/rest/v1/rpc/release_username", {method: "POST", headers: H, body: JSON.stringify({p_name: _u, p_token: _t})}).catch(() => {}); store.del(VK); store.del(PK); store.del(PNK); store.del(UK); store.del(UCK); store.del(MK); store.del(RK); store.del(VRK); history.replaceState(null, "", location.pathname); }
 
 // Giorno corrente in ora italiana (la mezzanotte azzera i pallini)
 function today(){
@@ -479,7 +514,11 @@ function today(){
   return {key: p.year + "-" + p.month + "-" + p.day, start: new Date(now - since - now % 1000), msLeft: 86400000 - since};
 }
 setTimeout(() => location.reload(), today().msLeft + 1500);
-const hasPin = () => store.get(PK) === today().key;
+const MAXPINS = 3;
+function pinState(){ try{ const j = JSON.parse(store.get(PNK) || "null"); if (j && j.d === today().key) return j; }catch(e){} return {d: today().key, n: 0, cur: null}; }
+function savePins(st){ store.set(PNK, JSON.stringify(st)); }
+const hasPin = () => !!pinState().cur;
+const pinsLeft = () => MAXPINS - pinState().n;
 
 // ---- Toast
 let tt;
@@ -827,24 +866,47 @@ function voter(){
   return v;
 }
 const rxDlg = $("reactDlg"); let rxTarget = null;
-function openReact(t){
+let rxState = null, rxTick = null;
+const lockLeft = () => rxState && rxState.until ? Date.parse(rxState.until) - (Date.now() + rxState.skew) : 0;
+function drawRx(){
+  if (!rxTarget || !rxState) return;
+  const left = lockLeft(), locked = left > 0, cur = rxState.kind;
+  $("rxLock").hidden = !locked;
+  if (locked) $("rxTimer").textContent = mmss(Math.ceil(left / 1000));
+  $("rxTxt").textContent = cur ? "La tua reazione a" : "Reagisci al pensiero di";
+  $("rxDel").hidden = !cur || locked;
+  [...$("rxRow").children].forEach(b => b.classList.toggle("sel", b.dataset.k === cur));
+}
+async function openReact(t){
   if (String(t.id) === store.get(MK)){ toast("Non puoi reagire al tuo pensiero"); return; }
-  if (reacted().has(t.id)){ toast("Hai già reagito a questo pensiero"); return; }
-  rxTarget = t; $("rxName").textContent = t.nickname || "Anonimo";
-  rxDlg.hidden = true; void rxDlg.offsetWidth; rxDlg.hidden = false;
+  try{
+    const r = await api("reaction_status", {p_thought: t.id, p_token: voter()});
+    rxTarget = t; rxState = {kind: r.kind, until: r.until, skew: Date.parse(r.now) - Date.now()};
+  }catch(e){ toast("Non riesco ad aprire le reazioni"); return; }
+  $("rxName").textContent = t.nickname || "Anonimo";
+  drawRx(); rxDlg.hidden = true; void rxDlg.offsetWidth; rxDlg.hidden = false;
+  clearInterval(rxTick); rxTick = setInterval(() => { if (rxDlg.hidden) clearInterval(rxTick); else drawRx(); }, 1000);
 }
 KINDS.forEach(k => {
-  const b = document.createElement("button"); b.type = "button"; b.className = "rxb"; b.textContent = k.e; b.setAttribute("aria-label", k.k);
+  const b = document.createElement("button"); b.type = "button"; b.className = "rxb"; b.textContent = k.e; b.dataset.k = k.k; b.setAttribute("aria-label", k.k);
   b.onclick = async () => {
-    const t = rxTarget; rxDlg.hidden = true; if (!t) return;
+    const t = rxTarget; if (!t || lockLeft() > 0) return;
+    if (rxState.kind === k.k){ toast("È già la tua reazione"); return; }
+    const replacing = !!rxState.kind; rxDlg.hidden = true;
     try{
-      const r = await fetch(REACT_API, {method: "POST", headers: {...H, Prefer: "return=minimal"}, body: JSON.stringify({thought_id: t.id, kind: k.k, voter: voter(), name: getUser() || null})});
-      if (r.ok || r.status === 409){ markReacted(t.id); toast(r.ok ? "Reazione inviata " + k.e : "Hai già reagito a questo pensiero"); }
-      else throw new Error(r.status);
+      const r = await api("set_reaction", {p_thought: t.id, p_token: voter(), p_kind: k.k, p_name: getUser() || null});
+      toast(r && r.ok === false ? "Potrai reagire di nuovo tra poco" : (replacing ? "Reazione cambiata " : "Reazione inviata ") + k.e);
     }catch(e){ toast("Non sono riuscito a inviare la reazione"); }
   };
   $("rxRow").append(b);
 });
+$("rxDel").onclick = async () => {
+  const t = rxTarget; if (!t) return; rxDlg.hidden = true;
+  try{
+    const r = await api("remove_reaction", {p_thought: t.id, p_token: voter()});
+    toast(r && r.ok ? "Reazione rimossa: potrai rimetterla tra 30 minuti" : "Nessuna reazione da rimuovere");
+  }catch(e){ toast("Non sono riuscito a rimuovere la reazione"); }
+};
 document.addEventListener("pointerdown", e => { if (!rxDlg.hidden && !e.target.closest("#rxCard")){ rxDlg.hidden = true; rxClosedAt = Date.now(); } });
 
 // Solo chi ha scritto vede le emoji uscire dal proprio messaggio, una reazione alla volta
@@ -921,13 +983,13 @@ function textLines(msg, w){
 }
 function popupNode(t){
   const sh = SHAPES.find(x => x.id === t.shape) || SHAPES[0], col = COLORS.some(c => c.v === t.color) ? t.color : COLORS[0].v;
-  const lines = textLines(t.message, 220 - sh.pl - sh.pr), th = Math.min(lines, 3) * LH, H = th + 18 + sh.pt + sh.pb;
+  const lines = t.has_audio ? 2 : textLines(t.message, 220 - sh.pl - sh.pr), th = Math.min(lines, 3) * LH, H = th + 18 + sh.pt + sh.pb;
   const d = document.createElement("div"); d.className = "bub" + (lines === 1 ? " one" : "");
   d.style.setProperty("--shape", svgUrl(sh, H)); d.style.setProperty("--tc", col);
   d.style.setProperty("--pl", sh.pl + "px"); d.style.setProperty("--pr", sh.pr + "px");
   d.style.height = (H + TAIL) + "px"; d.style.paddingTop = sh.pt + "px";
   const sc = document.createElement("div"); sc.className = "bsc"; sc.style.height = th + "px";
-  const tx = document.createElement("div"); tx.className = "btx"; tx.textContent = t.message; sc.append(tx);
+  const tx = document.createElement("div"); tx.className = "btx"; if (t.has_audio) tx.append(audioPlayer(t)); else tx.textContent = t.message; sc.append(tx);
   sc.onclick = () => { if (sc.dataset.over) openRead(t, col); };
   const ft = document.createElement("div"); ft.className = "bft";
   const nm = document.createElement("span"); nm.className = "nm"; nm.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
@@ -941,6 +1003,7 @@ function popupNode(t){
     b.lastChild.textContent = label; b.onclick = fn; bar.append(b);
   };
   if (t.has_photo) mk("photoBtn", "Scopri Foto!", "", () => openPhoto(t));
+  if (mine && pinsLeft() > 0) mk("miniBtn", "Elimina", ICON_TRASH, () => askDelete(t));
   if (mine && !t.has_photo) mk("miniBtn", "Aggiungi foto", ICON_CAM, () => openCam(d2 => addPhotoLater(t, d2)));
   if (!mine) mk("miniBtn", "Chatta", ICON_CHAT, () => startChat(t));
   mk("miniBtn", "Commenti", ICON_CMT, () => openComments(t));
@@ -960,8 +1023,8 @@ function addThought(t, prepend){
     else { m._lt = now; m._tm = setTimeout(() => { m._lt = 0; m.openPopup(); }, 280); }
   });
   m.on("popupopen", ev => { measure(ev.popup); if (String(t.id) === store.get(MK)) startSpray(ev.popup, t.id); });
-  m.on("popupclose", stopSpray);
-  const li = document.createElement("li");
+  m.on("popupclose", () => { stopSpray(); stopAud(); });
+  const li = document.createElement("li"); li.dataset.id = t.id;
   const a = document.createElement("div"); a.className = "t"; a.textContent = t.message;
   const b = document.createElement("div"); b.className = "m"; b.textContent = (t.nickname || "Anonimo") + " · " + fmt(t.created_at);
   li.append(a, b);
@@ -988,7 +1051,7 @@ map.on("click", e => {
   if (Date.now() - justClosed < 300 || Date.now() - rxClosedAt < 400) return;
   closeAllMenus();
   if (dOpen){ openD(false); return; }
-  if (hasPin()){ toast("Hai esaurito i pin per oggi"); return; }
+  if (hasPin() || pinsLeft() <= 0){ toast(pinsLeft() <= 0 ? "Hai esaurito i pin per oggi" : "Hai già un pin: cancellalo se vuoi riscriverlo"); return; }
   if (tooClose(e.latlng)){ toast(CLOSE_MSG); return; }
   picked = e.latlng;
   if (pickMarker) pickMarker.setLatLng(picked); else pickMarker = L.marker(picked, {icon: icon(getUser(), "new")}).addTo(map);
@@ -997,10 +1060,22 @@ map.on("click", e => {
 });
 // ---- Foto: facoltativa, una sola, solo se c'è un messaggio
 let photo = null, camStream = null, camFacing = "environment", camMirror = false;
+let audio = null, rec = null, recStream = null, recChunks = [], recT = null, recStart = 0, recCancel = false, prevAudio = null;
+const MAXREC = 30;
 const camDlg = $("camDlg"), camVideo = $("camVideo"), photoCache = new Map();
 function stopCam(){ if (camStream){ camStream.getTracks().forEach(t => t.stop()); camStream = null; } camVideo.srcObject = null; }
-function showPhoto(){ $("thumb").src = photo || ""; $("thumbBox").hidden = !photo; $("camHint").hidden = !!photo; }
-function clearPhoto(){ photo = null; showPhoto(); $("camBtn").classList.toggle("off", !text.value.trim()); }
+function showPhoto(){ $("thumb").src = photo || ""; $("thumbBox").hidden = !photo; syncMic(); }
+// Testo e audio si escludono: o scrivi, o registri
+function syncMic(){
+  const has = !!text.value.trim(), recording = !!rec && rec.state === "recording";
+  $("micBtn").hidden = !!audio; $("micBtn").classList.toggle("off", has && !recording); $("micBtn").classList.toggle("rec", recording);
+  $("micBox").hidden = !audio; $("micLive").hidden = !recording;
+  $("camHint").hidden = !!photo || !!audio || recording;
+  text.disabled = !!audio || recording;
+  text.placeholder = audio ? "Hai registrato un audio: eliminalo per poter scrivere" : "";
+  $("camBtn").classList.toggle("off", !(has || audio));
+}
+function clearPhoto(){ photo = null; showPhoto(); }
 function compress(src, w, h, mirror, ar){
   let sx = 0, sy = 0, sw = w, sh = h;
   if (ar){ if (w / h > ar){ sw = h * ar; sx = (w - sw) / 2; } else { sh = w / ar; sy = (h - sh) / 2; } }
@@ -1023,7 +1098,7 @@ async function startCam(){
   }catch(e){ return false; }
 }
 $("camBtn").onclick = async () => {
-  if (!text.value.trim()){ msg.textContent = "Scrivi prima il messaggio: la foto si può aggiungere solo a un pensiero."; return; }
+  if (!text.value.trim() && !audio){ msg.textContent = "Scrivi prima il messaggio (o registra un audio): la foto si aggiunge solo a un pensiero."; return; }
   openCam(d => { photo = d; showPhoto(); });
 };
 let camCb = null;
@@ -1297,6 +1372,112 @@ setInterval(checkEpoch, 20000);
 document.addEventListener("visibilitychange", () => { if (!document.hidden) checkEpoch(); });
 checkEpoch();
 
+// ---- Audio al posto del testo
+const ICON_PLAY = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>';
+const ICON_TRASH = '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+const mmss = n => Math.floor(n / 60) + ":" + String(Math.floor(n % 60)).padStart(2, "0");
+const audioCache = new Map();
+let aud = null, audBtn = null, audId = null;
+function stopAud(){
+  if (aud){ aud.pause(); aud = null; }
+  if (audBtn){ audBtn.classList.remove("on"); audBtn.querySelector(".ap").innerHTML = ICON_PLAY; audBtn = null; }
+  audId = null;
+}
+function audioPlayer(t){
+  const b = document.createElement("button"); b.type = "button"; b.className = "aud";
+  b.innerHTML = '<span class="ap">' + ICON_PLAY + '</span><span class="ab">' + "<i></i>".repeat(14) + "</span>";
+  b.onclick = e => { e.stopPropagation(); toggleAud(t, b); };
+  return b;
+}
+async function toggleAud(t, b){
+  if (audId === t.id && aud){
+    if (aud.paused){ aud.play(); b.classList.add("on"); b.querySelector(".ap").innerHTML = ICON_PAUSE; }
+    else { aud.pause(); b.classList.remove("on"); b.querySelector(".ap").innerHTML = ICON_PLAY; }
+    return;
+  }
+  stopAud();
+  try{
+    let d = audioCache.get(t.id);
+    if (!d){
+      b.classList.add("load");
+      const r = await fetch(SB_URL + "/rest/v1/audios?select=data&thought_id=eq." + t.id, {headers: H});
+      if (!r.ok) throw new Error(r.status);
+      const rows = await r.json();
+      if (!rows.length || !/^data:audio\//.test(rows[0].data)) throw new Error("no audio");
+      d = rows[0].data; audioCache.set(t.id, d);
+    }
+    aud = new Audio(d); audId = t.id; audBtn = b; aud.onended = () => stopAud();
+    await aud.play(); b.classList.add("on"); b.querySelector(".ap").innerHTML = ICON_PAUSE;
+  }catch(e){ stopAud(); toast("Non riesco a riprodurre l'audio"); }
+  b.classList.remove("load");
+}
+const blobToDataUrl = b => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(b); });
+async function startRec(){
+  if (!navigator.mediaDevices || !window.MediaRecorder){ msg.textContent = "Questo browser non permette di registrare audio."; return; }
+  try{ recStream = await navigator.mediaDevices.getUserMedia({audio: true}); }
+  catch(e){ msg.textContent = "Per registrare serve il permesso di usare il microfono."; return; }
+  const mt = ["audio/mp4", "audio/webm;codecs=opus", "audio/webm"].find(x => MediaRecorder.isTypeSupported(x));
+  rec = new MediaRecorder(recStream, mt ? {mimeType: mt, audioBitsPerSecond: 32000} : {audioBitsPerSecond: 32000});
+  recChunks = []; recCancel = false;
+  rec.ondataavailable = e => { if (e.data.size) recChunks.push(e.data); };
+  rec.onstop = async () => {
+    clearInterval(recT); recStream.getTracks().forEach(x => x.stop()); recStream = null;
+    if (recCancel){ syncMic(); return; }
+    const dur = Math.max(1, Math.round((Date.now() - recStart) / 1000));
+    const d = await blobToDataUrl(new Blob(recChunks, {type: rec.mimeType || mt || "audio/webm"}));
+    if (d.length > 550000){ msg.textContent = "L'audio è troppo pesante: riprova più breve."; syncMic(); return; }
+    audio = {data: d, dur}; $("micDur").textContent = mmss(dur); syncMic();
+  };
+  msg.textContent = ""; rec.start(); recStart = Date.now(); syncMic();
+  recT = setInterval(() => {
+    const sec = (Date.now() - recStart) / 1000; $("micTime").textContent = mmss(sec);
+    if (sec >= MAXREC && rec.state === "recording") rec.stop();
+  }, 250);
+}
+function clearAudio(){
+  if (rec && rec.state === "recording"){ recCancel = true; rec.stop(); }
+  if (prevAudio){ prevAudio.pause(); prevAudio = null; }
+  audio = null; syncMic();
+}
+$("micBtn").onclick = () => {
+  if (rec && rec.state === "recording"){ rec.stop(); return; }
+  if (text.value.trim()){ msg.textContent = "Hai già scritto un pensiero: cancella il testo per registrare un audio."; return; }
+  startRec();
+};
+$("micPlay").innerHTML = ICON_PLAY;
+$("micPlay").onclick = () => {
+  if (!audio) return;
+  if (prevAudio && !prevAudio.paused){ prevAudio.pause(); $("micPlay").innerHTML = ICON_PLAY; return; }
+  prevAudio = new Audio(audio.data); prevAudio.onended = () => { $("micPlay").innerHTML = ICON_PLAY; };
+  prevAudio.play(); $("micPlay").innerHTML = ICON_PAUSE;
+};
+$("micX").onclick = () => { clearAudio(); $("micPlay").innerHTML = ICON_PLAY; if (photo && !text.value.trim()) clearPhoto(); };
+
+// ---- Eliminare il proprio pensiero (e riscriverlo, fino a 3 pin al giorno)
+let cfT = null;
+function askDelete(t){
+  cfT = t; $("cfP").textContent = "Dopo averlo eliminato potrai scriverne un altro (pin rimasti: " + pinsLeft() + ").";
+  $("cfDlg").hidden = false;
+}
+$("cfNo").onclick = () => { $("cfDlg").hidden = true; cfT = null; };
+$("cfYes").onclick = () => { const t = cfT; $("cfDlg").hidden = true; cfT = null; if (t) doDelete(t); };
+$("cfDlg").addEventListener("pointerdown", e => { if (e.target.id === "cfDlg"){ $("cfDlg").hidden = true; cfT = null; } });
+function removeThought(id){
+  const m = markers.get(id); if (m){ m.closePopup(); map.removeLayer(m); }
+  markers.delete(id); byId.delete(id); total--;
+  const el = list.querySelector('[data-id="' + id + '"]'); if (el) el.remove();
+  if (!list.children.length) list.innerHTML = '<li class="empty">Ancora nessun pensiero oggi. Lascia tu il primo.</li>';
+}
+async function doDelete(t){
+  try{
+    if (!(await api("delete_thought", {p_thought: t.id, p_token: voter()}))) throw new Error("no");
+    removeThought(t.id);
+    const st = pinState(); st.cur = null; savePins(st); store.del(MK);
+    toast("Pensiero eliminato · pin rimasti: " + pinsLeft());
+  }catch(e){ toast("Non sono riuscito a eliminare il pensiero"); }
+}
+
 // Chi legge: "Scopri Foto!" mostra la foto con una piccola animazione
 async function openPhoto(t){
   const dlg = $("photoDlg"), img = $("phImg"), ms = $("phMsg");
@@ -1318,31 +1499,33 @@ async function openPhoto(t){
 $("photoDlg").addEventListener("pointerdown", e => { if (e.target.id === "photoDlg") $("photoDlg").hidden = true; });
 
 function closeForm(){
-  picked = null; text.value = ""; clearPhoto(); stopCam(); camDlg.hidden = true; $("count").textContent = "0 / 280"; closePanel();
+  picked = null; text.value = ""; clearPhoto(); clearAudio(); stopCam(); camDlg.hidden = true; $("count").textContent = "0 / 280"; closePanel();
   if (pickMarker){ map.removeLayer(pickMarker); pickMarker = null; }
 }
 $("cancel").onclick = closeForm;
 text.oninput = () => {
   $("count").textContent = text.value.length + " / 280";
   const has = !!text.value.trim();
-  if (!has && photo) clearPhoto();
-  $("camBtn").classList.toggle("off", !has);
+  if (!has && !audio && photo) clearPhoto();
+  syncMic();
 };
 
 send.onclick = async () => {
   const message = text.value.trim();
   if (!picked) return;
-  if (hasPin()){ closeForm(); toast("Hai esaurito i pin per oggi"); return; }
-  if (!message){ msg.textContent = "Scrivi qualcosa prima di pubblicare."; return; }
+  if (hasPin() || pinsLeft() <= 0){ closeForm(); toast(pinsLeft() <= 0 ? "Hai esaurito i pin per oggi" : "Hai già un pin: cancellalo se vuoi riscriverlo"); return; }
+  if (rec && rec.state === "recording"){ msg.textContent = "Ferma la registrazione prima di pubblicare."; return; }
+  if (!message && !audio){ msg.textContent = "Scrivi un pensiero oppure registra un audio."; return; }
   if (tooClose(picked)){ msg.textContent = CLOSE_MSG; return; }
   send.disabled = true; msg.textContent = "Pubblico...";
   try{
-    const ph = photo;
-    const j = await api("post_thought", {p_lat: picked.lat, p_lng: picked.lng, p_message: message, p_nickname: getUser() || null,
-      p_color: pick.color, p_shape: pick.shape, p_token: voter(), p_photo: ph || null});
+    const ph = photo, au = audio;
+    const j = await api("post_thought", {p_lat: picked.lat, p_lng: picked.lng, p_message: au ? "🎤 Messaggio vocale" : message, p_nickname: getUser() || null,
+      p_color: pick.color, p_shape: pick.shape, p_token: voter(), p_photo: ph || null, p_audio: au ? au.data : null});
     const t = Array.isArray(j) ? j[0] : j;
-    store.set(PK, today().key); store.set(MK, String(t.id));
+    const st = pinState(); st.n++; st.cur = t.id; savePins(st); store.set(MK, String(t.id));
     if (ph) photoCache.set(t.id, ph);
+    if (au) audioCache.set(t.id, au.data);
     closeForm(); addThought(t, true); markers.get(t.id).openPopup(); toast("Pensiero pubblicato");
   }catch(e){
     msg.textContent = "Non è stato possibile pubblicare. Riprova.";
@@ -1359,11 +1542,15 @@ async function poll(){
     if (!r.ok) return;
     (await r.json()).forEach(t => addThought(t, true));
     if (++pollN % 3 === 0){
-      const r2 = await fetch(API + "?select=id&has_photo=eq.true&created_at=gte." + encodeURIComponent(today().start.toISOString()), {headers: H});
-      if (r2.ok) (await r2.json()).forEach(x => {
-        const t = byId.get(x.id);
-        if (t && !t.has_photo){ t.has_photo = true; markers.get(t.id).setPopupContent(popupNode(t)); }
-      });
+      const r2 = await fetch(API + "?select=id,has_photo&created_at=gte." + encodeURIComponent(today().start.toISOString()) + "&limit=1000", {headers: H});
+      if (r2.ok){
+        const rows = await r2.json(), ids = new Set(rows.map(x => x.id));
+        rows.forEach(x => {
+          const t = byId.get(x.id);
+          if (t && x.has_photo && !t.has_photo){ t.has_photo = true; markers.get(t.id).setPopupContent(popupNode(t)); }
+        });
+        [...byId.keys()].forEach(id => { if (!ids.has(id)) removeThought(id); });
+      }
     }
   }catch(e){}
 }
