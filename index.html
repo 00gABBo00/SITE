@@ -89,6 +89,12 @@ input{margin-bottom:12px}
 #layMenu[hidden]{display:none}
 #as{margin:0 0 12px;font-size:14px}
 #ok:disabled{opacity:.7}
+.wi{animation:wUp .65s cubic-bezier(.2,.9,.3,1.1) both}
+@keyframes wUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.wout{animation:wOut .35s ease-in both}
+@keyframes wOut{to{opacity:0;transform:translateY(-26px) scale(.96)}}
+#welcome .wnote{margin:14px 0 0;font-size:13px;opacity:.8}
+@media(prefers-reduced-motion:reduce){.wi,.wout{animation:none}}
 #ok.bad{background:#d9443f;color:#fff;animation:shake .5s}
 @keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-7px)}40%,60%{transform:translateX(7px)}}
 #menuPop{position:absolute;top:60px;right:12px;z-index:5;width:min(300px,calc(100% - 24px));background:#E6E1D7;color:#111;border-radius:22px;padding:16px 18px 14px;box-shadow:0 8px 30px rgba(0,0,0,.4);transform-origin:top right;opacity:0;transform:scale(.85) translateY(-10px);visibility:hidden;pointer-events:none;transition:opacity .22s,transform .3s cubic-bezier(.2,1.2,.3,1),visibility 0s .3s}
@@ -491,17 +497,12 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <h1>DreaMap</h1>
     <div id="wFirst">
       <p>La mappa dei pensieri di Avellino e provincia.</p>
-      <ul>
-        <li>Tocca un punto sulla mappa e scrivi un pensiero su quel posto.</li>
-        <li>Puoi mettere un solo pallino al giorno: a mezzanotte sparisce e potrai metterne un altro.</li>
-        <li>Tira giù la barra in alto per leggere i pensieri degli altri e raggiungerli sulla mappa.</li>
-        <li>Tocca due volte un pallino per reagire con un'emoji: chi ha scritto la vedrà saltare fuori dal suo messaggio.</li>
-      </ul>
       <label for="uIn">Scegli il tuo username</label>
       <p style="font-size:14px">Firmerà i tuoi pensieri e verrà ricordato ogni volta che torni. Almeno 6 caratteri, con al massimo 2 tra numeri e trattini.</p>
       <input id="uIn" maxlength="20" placeholder="Il tuo username" autocomplete="off">
       <p id="wErr" role="status"></p>
-      <button id="ok" type="button">Ho capito</button>
+      <button id="ok" type="button">Continua</button>
+      <p class="wnote">Poi una breve guida ti mostra come funziona.</p>
     </div>
     <div id="wBack" hidden><p id="wBackTxt">Bentornato.</p></div>
   </div>
@@ -782,15 +783,23 @@ if (getUser()){
   $("wBackTxt").textContent = "Bentornato, " + getUser() + ".";
   setTimeout(closeWelcome, 2200);
 } else {
+  // Prima compaiono DreaMap e la frase sui pensieri, poi lo username
+  [document.querySelector("#welcome h1"), ...$("wFirst").children].forEach((e, i) => {
+    e.classList.add("wi"); e.style.animationDelay = (i === 0 ? 0.1 : 0.7 + i * 0.13) + "s";
+    e.addEventListener("animationend", ev => { if (ev.animationName === "wUp"){ e.classList.remove("wi"); e.style.animationDelay = ""; } });
+  });
   $("ok").onclick = async () => {
     const btn = $("ok"), n = $("uIn").value.trim(), err = nameError(n);
     if (err){ $("wErr").textContent = err; bad(btn); return; }
     btn.disabled = true; btn.textContent = "Controllo...";
     const res = await claimName(n);
-    btn.disabled = false; btn.textContent = "Ho capito";
+    btn.disabled = false; btn.textContent = "Continua";
     if (res === "taken"){ $("wErr").textContent = "Questo username esiste già: cercane un altro."; bad(btn); return; }
     if (res === "error"){ $("wErr").textContent = "Non riesco a controllare lo username. Riprova."; bad(btn); return; }
-    store.set(UK, n); store.set(VK, "1"); refreshUser(); closeWelcome();
+    store.set(UK, n); store.set(VK, "1"); refreshUser();
+    // finito lo username: la schermata esce e arriva la guida
+    document.querySelector("#welcome .wbox").classList.add("wout");
+    setTimeout(() => { openGuide(); closeWelcome(); }, 350);
   };
   $("uIn").addEventListener("keydown", e => { if (e.key === "Enter") $("ok").click(); });
 }
