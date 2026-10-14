@@ -196,7 +196,7 @@ input{margin-bottom:12px}
 #phImg[hidden],#phMsg[hidden]{display:none}
 @keyframes reveal{from{opacity:0;filter:blur(16px) saturate(1.8);transform:scale(.9)}to{opacity:1;filter:none;transform:none}}
 .bw{display:flex;flex-direction:column;align-items:center;width:220px}
-.bw .photoBtn{position:relative;overflow:hidden;margin-bottom:6px;border:0;border-radius:999px;padding:9px 22px;font-weight:800;font-size:14px;color:#3a1d00;background:linear-gradient(135deg,#ffe29a,#ffb347 55%,#ff8a3c);box-shadow:0 0 0 2px rgba(255,255,255,.55),0 6px 18px rgba(255,150,40,.45);cursor:pointer;animation:wiggle 2.6s ease-in-out infinite,glow 2.6s ease-in-out infinite}
+.bw .photoBtn{position:relative;overflow:hidden;margin-bottom:6px;border:0;border-radius:999px;padding:9px 17px;font-weight:800;font-size:14px;color:#3a1d00;background:linear-gradient(135deg,#ffe29a,#ffb347 55%,#ff8a3c);box-shadow:0 0 0 2px rgba(255,255,255,.55),0 6px 18px rgba(255,150,40,.45);cursor:pointer;animation:wiggle 2.6s ease-in-out infinite,glow 2.6s ease-in-out infinite}
 .photoBtn::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.9),transparent);transform:skewX(-20deg);animation:sweep 2.6s ease-in-out infinite}
 @keyframes wiggle{0%,58%,100%{transform:rotate(0) scale(1)}62%{transform:rotate(-7deg) scale(1.07)}68%{transform:rotate(7deg) scale(1.07)}74%{transform:rotate(-5deg) scale(1.04)}80%{transform:rotate(5deg) scale(1.04)}86%{transform:rotate(-2deg)}}
 @keyframes glow{0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.55),0 6px 18px rgba(255,150,40,.45)}60%{box-shadow:0 0 0 3px rgba(255,255,255,.95),0 6px 28px rgba(255,170,60,.95)}}
@@ -204,7 +204,7 @@ input{margin-bottom:12px}
 @media(prefers-reduced-motion:reduce){.bw .photoBtn,.photoBtn::after,#phImg{animation:none}}
 .bbar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;margin-bottom:6px}
 .bw .bbar .photoBtn{margin-bottom:0}
-.miniBtn{display:inline-flex;align-items:center;gap:6px;border:0;border-radius:999px;padding:8px 14px;background:#E6E1D7;color:#111;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:transform .15s}
+.miniBtn{display:inline-flex;align-items:center;gap:5px;border:0;border-radius:999px;padding:8px 12px;background:#E6E1D7;color:#111;font-weight:700;font-size:13px;cursor:pointer;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:transform .15s}
 .miniBtn:active{transform:scale(.94)}
 #chatFab{position:fixed;left:12px;bottom:12px;z-index:960;width:54px;height:54px;border-radius:50%;border:0;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.4)}
 #chatFab[hidden]{display:none}
@@ -263,7 +263,7 @@ input{margin-bottom:12px}
 .dBtn .di{position:relative;width:46px;height:46px;border-radius:50%;background:#E6E1D7;color:#111;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.35);transition:transform .15s}
 .dBtn:hover .di{transform:scale(1.08)}
 .dBtn:active .di{transform:scale(.9)}
-#menuDrop.out .dBtn{animation:iconOut .2s ease-in both;animation-delay:calc((2 - var(--i)) * 45ms)}
+#menuDrop.out .dBtn{animation:iconOut .2s ease-in both;animation-delay:calc((3 - var(--i)) * 45ms)}
 #menuDrop.out .dl{animation:none;opacity:0}
 .dBadge{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:#d93a3a;color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .dBadge.zero{background:rgba(0,0,0,.6)}
@@ -331,6 +331,135 @@ input{margin-bottom:12px}
 #rxLock .tm{font-size:24px;font-variant-numeric:tabular-nums}
 #rxLock small{font-size:11px;font-weight:600;opacity:.85}
 @media(prefers-reduced-motion:reduce){.camb.rec,.aud.on .ab i{animation:none}}
+#guide{position:fixed;inset:0;z-index:2100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(120% 90% at 50% 0%,#3f8a4d 0%,#347641 55%,#2a6135 100%);color:#E6E1D7;animation:rfade .25s;-webkit-user-select:none;user-select:none;overflow:hidden}
+#guide[hidden]{display:none}
+#gBars{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);left:14px;right:60px;display:flex;gap:4px}
+.gb{flex:1;height:4px;border-radius:2px;background:rgba(230,225,215,.28);overflow:hidden}
+.gb i{display:block;height:100%;width:0;border-radius:2px;background:#E6E1D7;transition:width .35s}
+.gb.done i,.gb.cur i{width:100%}
+#gClose{position:absolute;top:calc(env(safe-area-inset-top,0px) + 2px);right:8px;width:48px;height:48px;border:0;background:transparent;color:#E6E1D7;font-size:30px;line-height:1;cursor:pointer}
+.gArr{position:absolute;top:50%;translate:0 -50%;font-size:36px;opacity:.28;pointer-events:none}
+#gArrL{left:10px;animation:gnL 2.4s ease-in-out infinite}
+#gArrR{right:10px;animation:gnR 2.4s ease-in-out infinite}
+@keyframes gnL{50%{transform:translateX(-5px)}}
+@keyframes gnR{50%{transform:translateX(5px)}}
+#gSlide{width:100%;max-width:440px;padding:0 24px;text-align:center;pointer-events:none}
+#guide.last #gSlide{padding-bottom:84px}
+.gIn{animation:gIn .4s cubic-bezier(.2,.9,.3,1.1) both}
+.gInL{animation:gInL .4s cubic-bezier(.2,.9,.3,1.1) both}
+@keyframes gIn{from{opacity:0;transform:translateX(44px)}to{opacity:1;transform:none}}
+@keyframes gInL{from{opacity:0;transform:translateX(-44px)}to{opacity:1;transform:none}}
+#gSlide h2{margin:20px 0 8px;font-size:25px;font-weight:800;letter-spacing:-.02em}
+#gSlide p{margin:0;font-size:15.5px;line-height:1.5}
+#gDone{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);translate:-50% 0;border:0;border-radius:999px;padding:15px 44px;background:#E6E1D7;color:#347641;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.35);animation:gdone .55s cubic-bezier(.2,1.5,.4,1) both,gglow 2.2s ease-in-out .6s infinite}
+#gDone[hidden]{display:none}
+#gDone.nudge{animation:gshake .45s}
+@keyframes gdone{from{opacity:0;transform:translateY(24px) scale(.6)}to{opacity:1;transform:none}}
+@keyframes gglow{50%{box-shadow:0 8px 24px rgba(0,0,0,.35),0 0 0 8px rgba(230,225,215,.22)}}
+@keyframes gshake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.gStage{position:relative;height:240px;border-radius:28px;overflow:hidden;box-shadow:0 14px 34px rgba(0,0,0,.35);pointer-events:none}
+.gStage.map{background:var(--gmap) center/cover}
+.gStage.plain{background:rgba(0,0,0,.2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:12px}
+.gStage.pb{padding-bottom:62px}
+.gStage.flow{height:auto;min-height:240px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 0}
+.gStage.flow .pin{margin-top:-4px}
+@media(max-height:700px){.gStage{zoom:.82}}
+.gp{position:absolute;translate:-50% -50%;animation:gfloat 3s ease-in-out infinite}
+.gp.fade{animation:gfade 4s ease-in-out infinite}
+@keyframes gfloat{50%{transform:translateY(-6px)}}
+@keyframes gfade{0%,55%{opacity:1}85%,100%{opacity:0}}
+.pin.gbig{width:46px;height:46px;font-size:17px;border-width:3px}
+.gname{font-size:30px;font-weight:800;letter-spacing:.02em}
+.gname b{background:#E6E1D7;color:#347641;border-radius:8px;padding:0 6px;margin:0 1px}
+.garr{font-size:22px;opacity:.85}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+.gchip{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:999px;background:rgba(230,225,215,.2)}
+.gpinch{position:absolute;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.55);border:2px solid #fff}
+.gpinch.a{left:44%;top:44%;animation:gpa 2.4s ease-in-out infinite}
+.gpinch.b{left:52%;top:52%;animation:gpb 2.4s ease-in-out infinite}
+@keyframes gpa{0%,100%{transform:translate(0,0)}50%{transform:translate(-44px,-34px)}}
+@keyframes gpb{0%,100%{transform:translate(0,0)}50%{transform:translate(44px,34px)}}
+.gring{position:absolute;width:22px;height:22px;border-radius:50%;border:3px solid #fff;translate:-50% -50%;animation:gring 1.8s ease-out infinite}
+@keyframes gring{from{transform:scale(.4);opacity:1}to{transform:scale(3);opacity:0}}
+.gpanel{position:absolute;left:12px;right:12px;bottom:12px;border-radius:22px;background:#347641;border:1px solid rgba(230,225,215,.3);padding:10px 14px 12px;text-align:left;box-shadow:0 8px 24px rgba(0,0,0,.4);animation:gup .6s cubic-bezier(.2,1.2,.4,1) both}
+@keyframes gup{from{transform:translateY(90px)}to{transform:none}}
+.gpt{font-weight:800;font-size:15px;margin-bottom:8px}
+.gta{display:flex;align-items:center;background:#d4c3a1;color:#1f2d5a;border-radius:12px;padding:0 10px;font-size:13px;font-weight:600;height:34px;overflow:hidden;white-space:nowrap}
+.gty{display:inline-block;overflow:hidden;animation:gtype 3.6s steps(22) infinite}
+.gta i{width:2px;height:16px;background:#1f2d5a;margin-left:2px;animation:gblink .8s steps(1) infinite}
+@keyframes gtype{0%{max-width:0}60%,100%{max-width:240px}}
+@keyframes gblink{50%{opacity:0}}
+.gbt{margin:8px 0 0 auto;width:fit-content;border:1px solid #E6E1D7;border-radius:999px;padding:5px 14px;font-weight:700;font-size:12px}
+.gsh{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 14px}
+.gsc{display:flex;flex-direction:column;align-items:center;gap:2px;animation:gpopin .5s cubic-bezier(.2,1.4,.4,1) both}
+.gsc:nth-child(2){animation-delay:.08s}.gsc:nth-child(3){animation-delay:.16s}.gsc:nth-child(4){animation-delay:.24s}.gsc:nth-child(5){animation-delay:.32s}.gsc:nth-child(6){animation-delay:.4s}
+.gsc .th{width:92px;height:55px;font-size:18px}
+@keyframes gpopin{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+.gsw{display:flex;gap:8px}
+.gcmp{width:100%;max-width:330px;background:#347641;border:1px solid rgba(230,225,215,.28);border-radius:18px;padding:9px 12px;text-align:left}
+.gta2{background:#d4c3a1;color:#1f2d5a;border-radius:10px;padding:7px 10px;font-size:12.5px;font-weight:600}
+.gta2.dis{opacity:.55;font-weight:500}
+.grow{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px}
+.grow .camb{width:34px;height:34px}
+.grow small{opacity:.85}
+.gor{font-size:12px;font-weight:700;opacity:.8}
+.g3{display:flex;gap:18px}
+.gslot{position:relative}
+.gslot.used .pin{opacity:.3}
+.gslot.used::after{content:"×";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:800;color:#fff}
+.gslot .pin{width:42px;height:42px;font-size:15px;border-width:3px}
+.gcard{width:100%;max-width:340px;background:#E6E1D7;color:#111;border-radius:24px;padding:12px 14px;text-align:center}
+.gcard.sand{background:#d4c3a1;color:#2b2416}
+.gct{font-size:12px;margin-bottom:6px}
+.grx{display:flex;justify-content:center;gap:4px}
+.grx span{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;animation:gjump 2.5s ease-in-out infinite}
+.grx span:nth-child(2){animation-delay:.2s}.grx span:nth-child(3){animation-delay:.4s}.grx span:nth-child(4){animation-delay:.6s}.grx span:nth-child(5){animation-delay:.8s}
+.grx .sel{background:rgba(31,45,90,.16);box-shadow:inset 0 0 0 2px #1f2d5a}
+@keyframes gjump{0%,60%,100%{transform:none}70%{transform:translateY(-8px) scale(1.15)}}
+.gbot{display:flex;align-items:flex-end;justify-content:space-between;width:100%;max-width:340px;padding:0 6px}
+.gspray{position:relative;width:90px;height:84px;display:flex;align-items:flex-end;justify-content:center}
+.gspray span{position:absolute;left:50%;top:44px;font-size:20px;line-height:1;opacity:0;animation:gspr 2.6s ease-out infinite}
+@keyframes gspr{0%{opacity:0;transform:translate(-50%,0) scale(.3)}15%{opacity:1}45%{transform:translate(calc(-50% + var(--dx) * .6),calc(var(--dy) * -1)) scale(1.1)}100%{opacity:0;transform:translate(calc(-50% + var(--dx)),20px) scale(.9)}}
+.glock{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.68);border-radius:16px;padding:10px 16px;font-size:20px}
+.gclk{font-variant-numeric:tabular-nums}
+.gci{background:#E6E1D7;color:#2b2416;border-radius:14px;padding:7px 12px;font-size:12.5px;margin-bottom:6px;text-align:left;line-height:1.35}
+.gci.new{box-shadow:inset 4px 0 0 #1f2d5a}
+.gtag{font-style:normal;font-size:10px;font-weight:700;background:#d4c3a1;border-radius:999px;padding:1px 7px;margin-left:5px}
+.gtgs{display:flex;gap:6px;margin:8px 0 6px}
+.gtg{border:1.5px solid #1f2d5a;color:#1f2d5a;border-radius:999px;padding:3px 11px;font-size:11.5px;font-weight:700}
+.gtg.on{background:#1f2d5a;color:#E6E1D7}
+.gin{display:flex;gap:6px}
+.gin span{flex:1;background:#E6E1D7;border-radius:10px;padding:6px 10px;font-size:12px;color:#7a6c4f;text-align:left}
+.gin em{font-style:normal;background:#1f2d5a;color:#E6E1D7;border-radius:10px;padding:6px 12px;font-size:12px;font-weight:700}
+.gchat{display:inline-block;margin-top:5px;background:#1f2d5a;color:#E6E1D7;border-radius:999px;padding:4px 12px;font-size:11.5px;font-weight:700}
+.gm{max-width:78%;padding:7px 12px;border-radius:16px;font-size:12.5px;margin-bottom:6px;text-align:left}
+.gm.you{background:#E6E1D7;color:#2b2416;margin-right:auto}
+.gm.me{background:#1f2d5a;color:#E6E1D7;margin-left:auto}
+.gstat{font-size:11px;font-weight:600;color:#5b4f38;margin-top:4px}
+.gfab{position:absolute;left:12px;bottom:12px;width:46px;height:46px;border-radius:50%;background:#d4c3a1;color:#1f2d5a;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.4);animation:bump .8s 1s 3}
+.gfab b,.gbell i{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:#d93a3a;color:#fff;font-size:11px;font-style:normal;display:flex;align-items:center;justify-content:center}
+.gdr{position:absolute;left:14px;right:14px;top:0;height:176px;border-radius:0 0 26px 26px;background:#347641;border:1px solid rgba(230,225,215,.25);border-top:0;padding:12px;text-align:left}
+.gdh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.gdh b{font-size:15px}
+.gsp{width:34px}
+.gham{width:36px;height:30px;border-radius:10px;background:#E6E1D7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
+.gham i{display:block;width:16px;height:2px;border-radius:1px;background:#111}
+.gli{background:rgba(0,0,0,.2);border-radius:14px;padding:8px 12px;font-size:12px;margin-bottom:6px}
+.gpill{position:absolute;left:50%;bottom:8px;translate:-50% 0;width:36px;height:4px;border-radius:2px;background:#E6E1D7;opacity:.6}
+.gdrop{position:absolute;right:26px;top:58px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.gdl{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;animation:gdpop 4.2s ease-in-out infinite;animation-delay:calc(var(--i) * .14s)}
+.gdl span{background:rgba(0,0,0,.35);border-radius:999px;padding:3px 9px}
+.gdl b{width:32px;height:32px;border-radius:50%;background:#E6E1D7;color:#111;display:flex;align-items:center;justify-content:center}
+@keyframes gdpop{0%,6%{opacity:0;transform:translateY(-14px) scale(.3) rotate(-40deg)}16%,78%{opacity:1;transform:none}90%,100%{opacity:0;transform:translateY(-10px) scale(.4)}}
+.gnh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.gbell{position:relative;width:34px;height:34px;border-radius:50%;background:#E6E1D7;color:#111;display:flex;align-items:center;justify-content:center;animation:buzzR 2.4s ease-in-out infinite}
+.gtimer{position:absolute;left:50%;bottom:16px;translate:-50% 0;border-radius:22px;padding:10px 18px 12px;background:#347641;border:1px solid rgba(230,225,215,.3);box-shadow:0 6px 20px rgba(0,0,0,.4);text-align:left;white-space:nowrap}
+.gtl{font-size:11px;padding-right:30px}
+.gclock{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.15}
+.gtres{position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:8px;border:1px solid rgba(230,225,215,.35);background:rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center}
+.gsp2{position:absolute;font-size:22px;animation:gtw 1.6s ease-in-out infinite}
+@keyframes gtw{50%{transform:scale(1.4) rotate(20deg);opacity:.5}}
+@media(prefers-reduced-motion:reduce){#guide *{animation:none!important}}
 #rFt{margin-top:12px;font-size:12px;font-weight:700}
 @keyframes rfade{from{opacity:0}to{opacity:1}}
 @keyframes rin{from{opacity:0;transform:translateY(14px) scale(.9)}to{opacity:1;transform:none}}
@@ -386,7 +515,8 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <div id="menuDrop" hidden>
       <button class="dBtn" style="--i:0" data-act="notif" aria-label="Notifiche"><span class="dl">Notifiche</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z"/><path d="M10 21a2 2 0 0 0 4 0"/></svg><b id="bellBadge" class="dBadge zero">0</b></span></button>
       <button class="dBtn" style="--i:1" data-act="map" aria-label="Tipo di mappa"><span class="dl">Mappa</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/></svg></span></button>
-      <button class="dBtn" style="--i:2" data-act="user" aria-label="Username"><span class="dl">Username</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span></button>
+      <button class="dBtn" style="--i:2" data-act="info" aria-label="Come si usa"><span class="dl">Info</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r=".7" fill="currentColor"/></svg></span></button>
+      <button class="dBtn" style="--i:3" data-act="user" aria-label="Username"><span class="dl">Username</span><span class="di"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></span></button>
     </div>
     <div id="layMenu" hidden></div>
     <div id="menuPop">
@@ -485,6 +615,13 @@ button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px soli
     <div class="cmRow"><input id="cmInput" maxlength="140" placeholder="Il tuo commento" autocomplete="off"><button id="cmSend" class="kb" type="button">Invia</button></div>
   </div>
 </div></div>
+<div id="guide" hidden role="dialog" aria-label="Come si usa DreaMap">
+  <div id="gBars"></div>
+  <button id="gClose" type="button" aria-label="Chiudi">×</button>
+  <div id="gArrL" class="gArr">‹</div><div id="gArrR" class="gArr">›</div>
+  <div id="gSlide"></div>
+  <button id="gDone" type="button" hidden>Ho capito!</button>
+</div>
 <div id="toast" class="glass" role="status"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -720,6 +857,7 @@ menuDrop.addEventListener("click", e => {
   if (a === "map"){ setMenu(false); layMenu.hidden = false; }
   else if (a === "user"){ layMenu.hidden = true; setMenu(true); }
   else if (a === "notif"){ layMenu.hidden = true; setMenu(false); openNotifs(); }
+  else if (a === "info"){ layMenu.hidden = true; setMenu(false); openGuide(); }
 });
 document.addEventListener("pointerdown", e => {
   if (e.target.closest("#menuPop,#menuBtn,#menuDrop,#layMenu")) return;
@@ -1477,6 +1615,105 @@ async function doDelete(t){
     toast("Pensiero eliminato · pin rimasti: " + pinsLeft());
   }catch(e){ toast("Non sono riuscito a eliminare il pensiero"); }
 }
+
+// ---- Guida: come si usa l'app (slide con esempi)
+const gsvg = d => '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">' + d + "</svg>";
+const ICON_MIC = gsvg('<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>');
+const G_BELL = gsvg('<path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z"/><path d="M10 21a2 2 0 0 0 4 0"/>');
+const G_MAP = gsvg('<path d="M9 4 3 6.5V20l6-2.5 6 2.5 6-2.5V4l-6 2.5L9 4Z"/><path d="M9 4v13.5M15 6.5V20"/>');
+const G_INFO = gsvg('<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r=".7" fill="currentColor"/>');
+const G_USER = gsvg('<path d="M12 12a4.2 4.2 0 1 0 0-8.4 4.2 4.2 0 0 0 0 8.4Z"/><path d="M4 21a8 8 0 0 1 16 0"/>');
+const G_LOCK = '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+const G_CHAT = ICON_CHAT.replace(/width="16" height="16"/, 'width="22" height="22"');
+const G_RES = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg>';
+const GMAP = 'url("data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 230" preserveAspectRatio="xMidYMid slice"><rect width="300" height="230" fill="#4d8a57"/><g fill="#3d7448" opacity=".7"><circle cx="190" cy="80" r="22"/><circle cx="60" cy="120" r="18"/><circle cx="270" cy="190" r="24"/></g><path d="M-10 170C60 130 120 200 190 150S290 110 320 130" stroke="#E6E1D7" stroke-width="10" fill="none" opacity=".8"/><path d="M90-10C110 60 70 130 120 240" stroke="#E6E1D7" stroke-width="7" fill="none" opacity=".65"/><path d="M210-10C200 50 250 100 235 240" stroke="#E6E1D7" stroke-width="6" fill="none" opacity=".55"/><g fill="#c9b79a" opacity=".6"><rect x="124" y="40" width="30" height="20" rx="4"/><rect x="40" y="60" width="26" height="22" rx="4"/><rect x="236" y="30" width="30" height="20" rx="4"/><rect x="150" y="185" width="34" height="22" rx="4"/><rect x="28" y="170" width="28" height="20" rx="4"/></g></svg>') + '")';
+const gh = html => { const d = document.createElement("div"); d.innerHTML = html.trim(); return d.firstElementChild; };
+const gst = (cls, inner) => gh('<div class="gStage ' + cls + '">' + inner + "</div>");
+const gpin = (txt, x, y, dl, cls) => '<div class="gp ' + (cls || "") + '" style="left:' + x + "%;top:" + y + '%"><div class="pin" style="animation-delay:' + (dl || 0) + 's">' + txt + "</div></div>";
+function dbub(shape, col, text, bar){
+  const sh = SHAPES.find(x => x.id === shape), lines = Math.min(3, textLines(text, 220 - sh.pl - sh.pr)), th = lines * LH, H = th + 18 + sh.pt + sh.pb;
+  const w = document.createElement("div"); w.className = "bw";
+  if (bar){ const b = document.createElement("div"); b.className = "bbar"; b.innerHTML = bar; w.append(b); }
+  const d = document.createElement("div"); d.className = "bub" + (lines === 1 ? " one" : "");
+  d.style.setProperty("--shape", svgUrl(sh, H)); d.style.setProperty("--tc", col);
+  d.style.setProperty("--pl", sh.pl + "px"); d.style.setProperty("--pr", sh.pr + "px");
+  d.style.height = (H + TAIL) + "px"; d.style.paddingTop = sh.pt + "px";
+  d.innerHTML = '<div class="bsc" style="height:' + th + 'px"><div class="btx"></div></div><div class="bft"><span class="nm">Marco · 18:42</span></div>';
+  d.querySelector(".btx").textContent = text; w.append(d); return w;
+}
+const gSpray = Array.from({length: 8}, (_, i) => '<span style="--dx:' + ((i - 3.5) * 15) + "px;--dy:" + (52 + (i % 3) * 16) + "px;animation-delay:" + (i * 0.22) + 's">' + ["❤️", "😂", "🔥"][i % 3] + "</span>").join("");
+const GS = [
+  {t: "Benvenuto su DreaMap", d: "La mappa dei pensieri di Avellino e provincia: lascia un pensiero su un luogo e leggi quelli degli altri. Tocca a destra per andare avanti, a sinistra per tornare indietro.",
+   v: () => gst("map", gpin("GE", 26, 40, .1) + gpin("MA", 68, 30, .35) + gpin("SO", 46, 70, .6) + gpin("LU", 82, 72, .85))},
+  {t: "Il tuo username", d: "Al primo accesso scegli lo username: da 6 a 20 caratteri, al massimo 2 tra numeri e trattini, e nessun altro può averlo uguale. Il tuo pallino mostra l'iniziale e la terzultima lettera. Puoi cambiarlo una volta al giorno dal menu.",
+   v: () => gst("plain", '<div class="gname"><b>G</b>abri<b>e</b>le</div><div class="garr">↓</div><div class="pin gbig">GE</div><div class="gchips"><span class="gchip">6–20 caratteri</span><span class="gchip">max 2 numeri o trattini</span><span class="gchip">unico</span></div>')},
+  {t: "Muoviti sulla mappa", d: "Trascina per spostarti e pizzica con due dita per ingrandire (sul computer usa + e −). Dal menu scegli la vista Satellite o Stradale. La mappa copre Avellino e la sua provincia.",
+   v: () => gst("map", gpin("GE", 50, 50, 0) + '<div class="gpinch a"></div><div class="gpinch b"></div>')},
+  {t: "Lascia un pensiero", d: "Tocca un punto della mappa: si apre «Il tuo pensiero». Scrivi fino a 280 caratteri e premi Pubblica. Il riquadro si sposta su e giù e si nasconde con la freccia. Non puoi mettere un pin troppo vicino a un altro (circa 25 metri).",
+   v: () => gst("map", gpin("GE", 50, 26, .05) + '<div class="gring" style="left:50%;top:26%"></div><div class="gpanel"><div class="gpt">Il tuo pensiero</div><div class="gta"><span class="gty">Che bella vista da qui</span><i></i></div><div class="gbt">Pubblica</div></div>')},
+  {t: "Forma e colore", d: "Prima di scrivere scegli il colore del testo (6 colori) e la forma del messaggio: Smussato, Nuvoletta, Pensiero, Pillola, Biglietto, Organica. La casella si adatta alla lunghezza del testo.",
+   v: () => {
+     const s = gst("plain", '<div class="gsh"></div><div class="gsw"></div>'), g = s.querySelector(".gsh");
+     SHAPES.forEach((sh, i) => {
+       const c = document.createElement("div"); c.className = "gsc"; c.innerHTML = '<span class="th">Aa</span><span class="sn"></span>';
+       c.firstChild.style.setProperty("--shape", svgUrl(sh, 106)); c.firstChild.style.setProperty("--tc", COLORS[i].v); c.lastChild.textContent = sh.n; g.append(c);
+     });
+     COLORS.forEach(c => { const b = document.createElement("span"); b.className = "sw"; b.textContent = "A"; b.style.setProperty("--c", c.v); s.querySelector(".gsw").append(b); });
+     return s;
+   }},
+  {t: "Testo, audio e foto", d: "Al posto del testo puoi registrare un audio fino a 30 secondi: o scrivi o registri, non entrambi. La foto è facoltativa e si aggiunge solo se hai scritto qualcosa o registrato un audio. Puoi aggiungerla anche dopo, dal tuo pensiero.",
+   v: () => gst("plain", '<div class="gcmp"><div class="gta2">Che bella piazza stasera…</div><div class="grow"><span class="camb">' + ICON_CAM + '</span><span class="camb off">' + ICON_MIC + '</span><small>se scrivi, il microfono si spegne</small></div></div><div class="gor">oppure</div><div class="gcmp"><div class="gta2 dis">Hai registrato un audio: eliminalo per poter scrivere</div><div class="grow"><span class="camb rec">' + ICON_MIC + '</span><b>● 0:12 / 0:30</b><small>l\'audio blocca il testo</small></div></div>')},
+  {t: "3 pin al giorno", d: "Hai 3 scritture al giorno. Se non ti convince, tocca il tuo pensiero ed Elimina: puoi riscriverlo, ma in tutto sono 3 volte (scrivi, elimini, riscrivi…). Poi compare «Hai esaurito i pin per oggi».",
+   v: () => gst("plain", '<div class="g3"><div class="gslot used"><div class="pin">GE</div></div><div class="gslot used"><div class="pin">GE</div></div><div class="gslot"><div class="pin">GE</div></div></div><div class="gchips"><span class="gchip">1ª scrittura</span><span class="gchip">2ª scrittura</span><span class="gchip">3ª: l\'ultima</span></div><button class="miniBtn" type="button">' + ICON_TRASH + "<span>Elimina</span></button>")},
+  {t: "Leggi i pensieri", d: "Tocca un pallino per aprire la nuvoletta. Il testo lungo scorre da solo: toccalo per leggerlo tutto. «Scopri Foto!» mostra la foto e il tasto play fa ascoltare un audio.",
+   v: () => {
+     const s = gst("map flow", "");
+     s.append(dbub("nuvoletta", COLORS[0].v, "Il tramonto più bello d'Irpinia", '<button class="photoBtn" type="button">Scopri Foto!</button><button class="miniBtn" type="button">' + ICON_CHAT + "<span>Chatta</span></button><button class=\"miniBtn\" type=\"button\">" + ICON_CMT + "<span>Commenti</span></button>"));
+     s.insertAdjacentHTML("beforeend", '<div class="pin">MA</div>'); return s;
+   }},
+  {t: "Reazioni", d: "Tocca due volte veloce un pallino per reagire con un'emoji (5 a scelta). Puoi cambiare reazione quando vuoi; se la rimuovi, per quel pallino devi aspettare 30 minuti, con lucchetto e timer. Chi ha scritto vede le emoji saltare fuori dal suo messaggio.",
+   v: () => gst("plain", '<div class="gcard"><div class="gct">Reagisci al pensiero di <b>Marco</b></div><div class="grx"><span>❤️</span><span class="sel">😂</span><span>😮</span><span>😢</span><span>🔥</span></div></div><div class="gbot"><div class="gspray"><div class="pin">GE</div>' + gSpray + '</div><div class="glock">' + G_LOCK + '<b class="gclk">29:41</b></div></div>')},
+  {t: "Commenti", d: "Ogni persona può lasciare un solo commento per pensiero, sul pensiero o sulla foto (max 140 caratteri). Si leggono solo aprendo il pensiero con «Commenti»: chi lo ha scritto li vede da lì e dalle notifiche.",
+   v: () => gst("plain", '<div class="gcard sand"><div class="gci"><b>Anna</b><i class="gtag">sul pensiero</i><div>Bellissimo, ci vado domani!</div></div><div class="gci"><b>Luca</b><i class="gtag">sulla foto</i><div>Che colori!</div></div><div class="gtgs"><span class="gtg on">Sul pensiero</span><span class="gtg">Sulla foto</span></div><div class="gin"><span>Il tuo commento</span><em>Invia</em></div></div>')},
+  {t: "Chat private", d: "Tocca «Chatta» su un pallino per scrivere a chi l'ha messo, anche con foto. Dopo un tuo messaggio aspetti la risposta prima di scriverne un altro. Il tasto in basso a sinistra compare quando hai una chat e segna i messaggi da leggere.",
+   v: () => gst("plain pb", '<div class="gcard sand"><div class="gm you">Ciao! Dov\'è scattata la foto?</div><div class="gm me">Vicino alla villa comunale 😊</div><div class="gstat">Aspetta la risposta di Anna per scrivere ancora.</div></div><div class="gfab">' + G_CHAT + "<b>2</b></div>")},
+  {t: "Tendina e menu", d: "Trascina verso il basso la barretta in alto: vedi tutti i pensieri di oggi e, toccandone uno, la mappa ti porta sul suo pallino. Le tre lineette aprono il menu: Notifiche, Mappa, Info e Username.",
+   v: () => gst("plain", '<div class="gdr"><div class="gdh"><i class="gsp"></i><b>Pensieri di oggi</b><span class="gham"><i></i><i></i><i></i></span></div><div class="gli">Il tramonto più bello della provincia</div><div class="gli">Che bella piazza stasera</div><div class="gpill"></div></div><div class="gdrop">' + [["Notifiche", G_BELL], ["Mappa", G_MAP], ["Info", G_INFO], ["Username", G_USER]].map((x, i) => '<div class="gdl" style="--i:' + i + '"><span>' + x[0] + "</span><b>" + x[1] + "</b></div>").join("") + "</div>")},
+  {t: "Notifiche", d: "La campanella raccoglie commenti e reazioni al tuo pensiero. Se ce ne sono di nuove vibrano prima la tendina, poi le tre lineette e infine la campanella. Tocca un nome per chattare con quella persona.",
+   v: () => gst("plain", '<div class="gcard sand"><div class="gnh"><b>Notifiche</b><span class="gbell">' + G_BELL + "<i>2</i></span></div><div class=\"gci new\"><b>Marco</b> ha reagito ❤️ al tuo pensiero<div class=\"gchat\">Chatta con Marco</div></div><div class=\"gci\"><b>Anna</b> ha commentato la tua foto<div>«Bellissima!»</div></div></div>")},
+  {t: "Timer e mezzanotte", d: "Il timer conta quanto manca a mezzanotte: spostalo dove vuoi e ingrandiscilo con due dita (sul computer, col quadratino in alto a destra). A mezzanotte spariscono pensieri, foto, audio, commenti, reazioni e chat: si riparte da zero, con 3 pin nuovi.",
+   v: () => gst("map", gpin("GE", 22, 24, 0, "fade") + gpin("MA", 74, 22, 0, "fade") + gpin("SO", 50, 46, 0, "fade") + '<div class="gtimer"><span class="gtres">' + G_RES + '</span><div class="gtl">I pensieri spariscono tra</div><div class="gclock">' + $("tv").textContent + "</div></div>")},
+  {t: "Tutto pronto!", d: "Tocca un punto sulla mappa e lascia il tuo primo pensiero. Puoi riaprire questa guida quando vuoi dal menu, con il pulsante «i».",
+   v: () => gst("map", '<div class="gp" style="left:50%;top:52%"><div class="pin gbig">GE</div></div><span class="gsp2" style="left:30%;top:24%">✨</span><span class="gsp2" style="left:66%;top:20%;animation-delay:.4s">✨</span><span class="gsp2" style="left:74%;top:64%;animation-delay:.8s">✨</span><span class="gsp2" style="left:22%;top:66%;animation-delay:1.2s">✨</span>')}
+];
+let gIdx = 0;
+$("guide").style.setProperty("--gmap", GMAP);
+$("gBars").innerHTML = GS.map(() => '<div class="gb"><i></i></div>').join("");
+function gShow(dir){
+  const s = GS[gIdx], wrap = document.createElement("div"), h2 = document.createElement("h2"), p = document.createElement("p");
+  wrap.className = dir < 0 ? "gInL" : "gIn"; h2.textContent = s.t; p.textContent = s.d; wrap.append(s.v(), h2, p);
+  $("gSlide").innerHTML = ""; $("gSlide").append(wrap);
+  [...$("gBars").children].forEach((b, i) => { b.classList.toggle("done", i < gIdx); b.classList.toggle("cur", i === gIdx); });
+  const last = gIdx === GS.length - 1; $("guide").classList.toggle("last", last); $("gDone").hidden = !last;
+}
+function openGuide(){ openD(false); gIdx = 0; $("guide").hidden = false; gShow(1); }
+function closeGuide(){ $("guide").hidden = true; }
+function gNext(){
+  if (gIdx < GS.length - 1){ gIdx++; gShow(1); }
+  else { const b = $("gDone"); b.classList.remove("nudge"); void b.offsetWidth; b.classList.add("nudge"); }
+}
+function gPrev(){ if (gIdx > 0){ gIdx--; gShow(-1); } else closeGuide(); }
+$("guide").addEventListener("click", e => {
+  if (e.target.closest("button")) return;
+  e.clientX < innerWidth * 0.35 ? gPrev() : gNext();
+});
+$("gClose").onclick = closeGuide;
+$("gDone").onclick = closeGuide;
+document.addEventListener("keydown", e => {
+  if ($("guide").hidden) return;
+  if (e.key === "ArrowRight" || e.key === " ") gNext(); else if (e.key === "ArrowLeft") gPrev(); else if (e.key === "Escape") closeGuide();
+});
+setInterval(() => { if (!$("guide").hidden) document.querySelectorAll(".gclock").forEach(x => { x.textContent = $("tv").textContent; }); }, 1000);
 
 // Chi legge: "Scopri Foto!" mostra la foto con una piccola animazione
 async function openPhoto(t){
